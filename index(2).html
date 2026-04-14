@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PolitiLab — Explorez votre identité politique</title>
+  <meta name="description" content="Trois outils pour explorer, analyser et visualiser votre positionnement politique.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+
+  <!-- Nav injected by JS -->
+
+  <div class="page-wrap">
+
+    <!-- ── HERO ── -->
+    <section class="hero">
+      <div class="hero-bg" aria-hidden="true">
+        <div class="hero-orb orb-1"></div>
+        <div class="hero-orb orb-2"></div>
+        <div class="hero-orb orb-3"></div>
+        <svg class="hero-grid" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid)"/>
+        </svg>
+      </div>
+
+      <div class="hero-inner z1">
+        <div class="hero-kicker fade-in">
+          <span class="tag" style="color:var(--accent); border-color: rgba(200,180,255,.3)">🗺️ PolitiLab</span>
+        </div>
+
+        <h1 class="hero-title fade-in" style="animation-delay:.08s">
+          Explorez votre<br>
+          <em class="serif grad-text">identité politique</em>
+        </h1>
+
+        <p class="hero-sub fade-in" style="animation-delay:.16s">
+          Trois outils pour comprendre où vous vous situez dans le paysage politique français.
+          Des questions, de vrais scrutins, des cartes visuelles.
+        </p>
+
+        <div class="hero-ctas fade-in" style="animation-delay:.24s">
+          <a href="politiscale.html" class="btn btn-primary">
+            Commencer le test
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <a href="#outils" class="btn btn-ghost">Voir les outils</a>
+        </div>
+
+        <div class="hero-stats fade-in" style="animation-delay:.32s">
+          <div class="stat"><span class="stat-n">80</span><span class="stat-l">questions</span></div>
+          <div class="stat-sep"></div>
+          <div class="stat"><span class="stat-n">10</span><span class="stat-l">axes idéologiques</span></div>
+          <div class="stat-sep"></div>
+          <div class="stat"><span class="stat-n">3</span><span class="stat-l">outils</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── OUTILS ── -->
+    <section class="outils-section" id="outils">
+      <div class="container">
+        <div class="section-label">Les outils</div>
+        <h2 class="outils-title">Trois façons d'explorer</h2>
+
+        <div class="outils-grid">
+
+          <!-- Card 1 — PolitiScale -->
+          <a href="politiscale.html" class="outil-card" data-color="accent">
+            <div class="outil-card-top">
+              <div class="outil-icon">🧭</div>
+              <div class="outil-badge">~10 min</div>
+            </div>
+            <h3 class="outil-name">PolitiScale</h3>
+            <p class="outil-desc">
+              80 questions, 10 axes idéologiques. Découvrez votre positionnement précis sur la boussole politique, de l'économie à l'écologie.
+            </p>
+            <div class="outil-tags">
+              <span class="tag" style="color:#e05a5a;border-color:rgba(224,90,90,.3)">Économie</span>
+              <span class="tag" style="color:#a0d080;border-color:rgba(160,208,128,.3)">Société</span>
+              <span class="tag" style="color:#60d090;border-color:rgba(96,208,144,.3)">Écologie</span>
+              <span class="tag" style="color:#6090e0;border-color:rgba(96,144,224,.3)">Géopolitique</span>
+            </div>
+            <div class="outil-arrow">
+              Commencer →
+            </div>
+          </a>
+
+          <!-- Card 2 — Politimètre -->
+          <a href="politimetre.html" class="outil-card" data-color="blue">
+            <div class="outil-card-top">
+              <div class="outil-icon">🗳️</div>
+              <div class="outil-badge">~3 min</div>
+            </div>
+            <h3 class="outil-name">Politimètre</h3>
+            <p class="outil-desc">
+              Votez sur de vrais scrutins de l'Assemblée Nationale et découvrez quel groupe parlementaire vote comme vous.
+            </p>
+            <div class="outil-tags">
+              <span class="tag" style="color:#60a0ff;border-color:rgba(96,160,255,.3)">AN 17e législature</span>
+              <span class="tag" style="color:#f0c060;border-color:rgba(240,192,96,.3)">Scrutins officiels</span>
+            </div>
+            <div class="outil-arrow">
+              Voter →
+            </div>
+          </a>
+
+          <!-- Card 3 — Journey -->
+          <a href="journey.html" class="outil-card" data-color="teal">
+            <div class="outil-card-top">
+              <div class="outil-icon">📍</div>
+              <div class="outil-badge">Créatif</div>
+            </div>
+            <h3 class="outil-name">My Political Journey</h3>
+            <p class="outil-desc">
+              Retracez l'évolution de vos idées politiques à travers le temps. Ajoutez vos idéologies, exportez en PNG.
+            </p>
+            <div class="outil-tags">
+              <span class="tag" style="color:#5de0c0;border-color:rgba(93,224,192,.3)">Visuel</span>
+              <span class="tag" style="color:#c8b4ff;border-color:rgba(200,180,255,.3)">Export PNG</span>
+            </div>
+            <div class="outil-arrow">
+              Créer →
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ABOUT ── -->
+    <section class="about-section">
+      <div class="container about-inner">
+        <div class="about-text">
+          <div class="section-label">À propos</div>
+          <h2 class="about-title">Aucune bonne réponse.<br><span class="serif">Que des vraies.</span></h2>
+          <p class="about-body">
+            PolitiLab est un projet indépendant, sans publicité et sans affiliation partisane.
+            Tous les outils sont conçus pour explorer, pas pour convaincre.
+            Les données des scrutins proviennent de l'Assemblée Nationale.
+          </p>
+          <div class="about-values">
+            <div class="value-item">
+              <div class="value-icon">🔒</div>
+              <div>
+                <div class="value-name">Privé</div>
+                <div class="value-desc">Aucune donnée collectée ni partagée</div>
+              </div>
+            </div>
+            <div class="value-item">
+              <div class="value-icon">⚖️</div>
+              <div>
+                <div class="value-name">Neutre</div>
+                <div class="value-desc">Pas de préférence partisane</div>
+              </div>
+            </div>
+            <div class="value-item">
+              <div class="value-icon">📂</div>
+              <div>
+                <div class="value-name">Ouvert</div>
+                <div class="value-desc">Code source consultable</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="about-visual" aria-hidden="true">
+          <div class="compass-deco">
+            <div class="compass-ring r1"></div>
+            <div class="compass-ring r2"></div>
+            <div class="compass-ring r3"></div>
+            <div class="compass-center">🗺️</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FOOTER ── -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-logo">
+          <div class="nav-logo-mark">🗺️</div>
+          <span class="nav-logo-text">Politi<span>Lab</span></span>
+        </div>
+        <div class="footer-links">
+          <a href="politiscale.html">PolitiScale</a>
+          <a href="politimetre.html">Politimètre</a>
+          <a href="journey.html">My Journey</a>
+        </div>
+        <div class="footer-copy">
+          Données : <a href="https://assemblee-nationale.fr" target="_blank" rel="noopener">assemblee-nationale.fr</a>
+          — Projet indépendant
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="js/nav.js"></script>
+</body>
+</html>
