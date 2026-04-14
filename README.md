@@ -1,1 +1,1 @@
-https://kevinraphael95.github.io/politiscale/
+https://kevinraphael95.github.io/randomstuff/
