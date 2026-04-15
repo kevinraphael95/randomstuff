@@ -349,7 +349,7 @@ function drawArrowOverlay(ctx, pos) {
   const last = pos[pos.length - 1];
   const lastY = last.top + LABEL_H + last.size + ARROW_OFFSET;
   const arrowEnd = Math.min(last.x + last.size + ARROW_OVERSHOOT + 30, CW - 10);
-  ctx.lineTo(arrowEnd, lastY);
+  ctx.lineTo(arrowEnd - 18, lastY);
   ctx.stroke();
 
   // Arrowhead
