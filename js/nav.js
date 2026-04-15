@@ -6,7 +6,6 @@
   'use strict';
 
   const NAV_ITEMS = [
-    { href: 'index.html',        icon: '🏠', label: 'Accueil' },
     { href: 'politiscale.html',  icon: '🧭', label: 'PolitiScale' },
     { href: 'politimetre.html',  icon: '🗳️', label: 'Politimètre' },
     { href: 'journey.html',      icon: '📍', label: 'My Journey' },
