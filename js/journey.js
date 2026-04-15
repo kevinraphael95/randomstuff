@@ -146,15 +146,28 @@ async function fetchWikipediaImage(searchName) {
 // ── Layout ──
 function getPositions(n) {
   const BASE_BOTTOM = CH - MARGIN_BOT;
+
+  // 🎯 facteur de scale selon le nombre d’éléments
+  const scale = n <= 2 ? 1.6
+              : n <= 4 ? 1.3
+              : n <= 6 ? 1.1
+              : n <= 8 ? 0.95
+              : 0.85;
+
+  const size = Math.floor(120 * scale);
+
   const maxSizeH = Math.floor((CW - MARGIN_L - 60) / n);
   const availV = BASE_BOTTOM - LABEL_H - MARGIN_TOP;
   const maxSizeV = Math.floor(availV / (1 + (n - 1) * 0.35));
-  const size = Math.min(120, maxSizeH, maxSizeV);
-  const stepY = Math.round(size * 0.35);
+
+  const finalSize = Math.min(size, maxSizeH, maxSizeV);
+
+  const stepY = Math.round(finalSize * (n <= 4 ? 0.55 : 0.35));
+
   return Array.from({ length: n }, (_, i) => ({
-    x: MARGIN_L + i * size,
-    top: BASE_BOTTOM - size - LABEL_H - i * stepY,
-    size,
+    x: MARGIN_L + i * finalSize,
+    top: BASE_BOTTOM - finalSize - LABEL_H - i * stepY,
+    size: finalSize,
     stepY,
   }));
 }
