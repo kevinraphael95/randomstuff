@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════
-   POLITILAB — Journey Logic
+   Journey Logic
    ══════════════════════════════════════════ */
 
 const IDEOLOGIES_LIST = [
