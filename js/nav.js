@@ -30,8 +30,8 @@
     logo.href = 'index.html';
     logo.className = 'nav-logo';
     logo.innerHTML = `
-      <div class="nav-logo-mark">🗺️</div>
-      <span class="nav-logo-text">Politi<span>Lab</span></span>
+      <div class="nav-logo-mark">🏠</div>
+      <span class="nav-logo-text"><span>Accueil</span></span>
     `;
     nav.appendChild(logo);
 
