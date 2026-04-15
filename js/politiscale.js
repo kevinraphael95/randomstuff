@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════
-   POLITILAB — PolitiScale Logic
+   PolitiScale Logic
    ══════════════════════════════════════════ */
 
 const AXES = [
