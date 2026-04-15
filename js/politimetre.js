@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════
-   POLITILAB — Politimètre Logic
+   Politimètre Logic
    ══════════════════════════════════════════ */
 
 const GROUPES = [
