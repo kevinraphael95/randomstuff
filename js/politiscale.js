@@ -113,18 +113,48 @@ const ANSWER_OPTIONS = [
 ];
 
 const DOMAIN_COLORS = {
-  '💰 Économie':        '#e05a5a',
-  '🌈 Société':         '#a0d080',
-  '⚖️ Libertés':        '#60c8a0',
-  '🌍 Géopolitique':    '#6090e0',
-  '🌿 Écologie':        '#60d090',
+  '💰 Économie':           '#e05a5a',
+  '🌈 Société':            '#a0d080',
+  '⚖️ Libertés':           '#60c8a0',
+  '🌍 Géopolitique':       '#6090e0',
+  '🌿 Écologie':           '#60d090',
   '✝️ Religion & Laïcité': '#e0b060',
-  '🗳️ Démocratie':      '#80c0e0',
-  '🏛️ Territoires':     '#90e0b0',
-  '🤖 Technologie & IA':'#c060e0',
-  '🛡️ Sécurité':        '#d06060',
+  '🗳️ Démocratie':         '#80c0e0',
+  '🏛️ Territoires':        '#90e0b0',
+  '🤖 Technologie & IA':   '#c060e0',
+  '🛡️ Sécurité':           '#d06060',
 };
 
+/* ══════════════════════════════════════════
+   CACHE localStorage
+   ══════════════════════════════════════════ */
+const CACHE_KEY = 'politiscale_v1';
+
+function saveCache() {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ answers, currentQ }));
+  } catch(e) {}
+}
+
+function loadCache() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+    if (!data.answers || data.answers.length !== QUESTIONS.length) return false;
+    answers = data.answers;
+    currentQ = data.currentQ || 0;
+    return true;
+  } catch(e) { return false; }
+}
+
+function clearCache() {
+  try { localStorage.removeItem(CACHE_KEY); } catch(e) {}
+}
+
+/* ══════════════════════════════════════════
+   NAVIGATION
+   ══════════════════════════════════════════ */
 function showScreen(id) {
   document.querySelectorAll('.ps-screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -132,6 +162,7 @@ function showScreen(id) {
 
 function buildIntro() {
   const wrap = document.getElementById('axes-preview');
+  wrap.innerHTML = '';
   const labels = ['Économie','Société','Libertés','Géopolitique','Écologie','Religion','Démocratie','Territoires','Technologie','Sécurité'];
   const colors = ['#e05a5a','#a0d080','#60c8a0','#6090e0','#60d090','#e0b060','#80c0e0','#90e0b0','#c060e0','#d06060'];
   labels.forEach((l, i) => {
@@ -184,15 +215,27 @@ function selectAnswer(key) {
   document.querySelectorAll('.answer-btn').forEach(b => {
     b.classList.toggle('selected', b.classList.contains(key));
   });
+  saveCache();
 }
 
 function nextQ() {
+  saveCache();
   if (currentQ === QUESTIONS.length - 1) showResults();
   else { currentQ++; renderQ(); }
 }
-function prevQ() { if (currentQ > 0) { currentQ--; renderQ(); } }
-function skipQ() { answers[currentQ] = 'n'; nextQ(); }
 
+function prevQ() {
+  if (currentQ > 0) { currentQ--; saveCache(); renderQ(); }
+}
+
+function skipQ() {
+  answers[currentQ] = 'n';
+  nextQ();
+}
+
+/* ══════════════════════════════════════════
+   CALCUL
+   ══════════════════════════════════════════ */
 function computeScores() {
   AXES.forEach(a => { scores[a.id] = 0; maxScores[a.id] = 0; });
   QUESTIONS.forEach((q, i) => {
@@ -211,39 +254,45 @@ function computeScores() {
   return norm;
 }
 
+/* ══════════════════════════════════════════
+   DONNÉES
+   ══════════════════════════════════════════ */
 const PARTIS = [
-  { name:'La France Insoumise',     color:'#e03030', scores:{eco:-90,soc:-80,auth:20,nat:40,env:50,reli:-60,dem:-80,geo:-30,tech:0,sec:-60} },
-  { name:'Parti Socialiste',         color:'#e07070', scores:{eco:-60,soc:-70,auth:-20,nat:-30,env:40,reli:-50,dem:-40,geo:-30,tech:10,sec:-20} },
+  { name:'La France Insoumise',        color:'#e03030', scores:{eco:-90,soc:-80,auth:20,nat:40,env:50,reli:-60,dem:-80,geo:-30,tech:0,sec:-60} },
+  { name:'Parti Socialiste',            color:'#e07070', scores:{eco:-60,soc:-70,auth:-20,nat:-30,env:40,reli:-50,dem:-40,geo:-30,tech:10,sec:-20} },
   { name:'Europe Écologie - Les Verts', color:'#60c060', scores:{eco:-50,soc:-90,auth:-70,nat:-80,env:95,reli:-60,dem:-80,geo:-60,tech:-20,sec:-70} },
-  { name:'Parti Communiste',         color:'#c01010', scores:{eco:-95,soc:-50,auth:40,nat:20,env:30,reli:-70,dem:-50,geo:-40,tech:-20,sec:-40} },
-  { name:'Renaissance (Macron)',     color:'#ff9900', scores:{eco:50,soc:-40,auth:20,nat:-50,env:30,reli:-30,dem:20,geo:20,tech:60,sec:30} },
-  { name:'Les Républicains',         color:'#2060c0', scores:{eco:50,soc:50,auth:50,nat:30,env:-20,reli:50,dem:20,geo:20,tech:20,sec:60} },
-  { name:'Rassemblement National',   color:'#1a3a7c', scores:{eco:-20,soc:70,auth:70,nat:95,env:-30,reli:60,dem:-40,geo:40,tech:-10,sec:80} },
-  { name:'Reconquête',               color:'#0a1a5c', scores:{eco:30,soc:90,auth:80,nat:100,env:-50,reli:80,dem:-20,geo:50,tech:10,sec:90} },
-  { name:'Debout la France',         color:'#003080', scores:{eco:-30,soc:40,auth:50,nat:90,env:0,reli:40,dem:-40,geo:30,tech:0,sec:70} },
-  { name:'Nouveau Centre / UDI',     color:'#70a0e0', scores:{eco:30,soc:-20,auth:10,nat:-20,env:20,reli:20,dem:10,geo:10,tech:30,sec:20} },
-  { name:'NPA / Révolutionnaires',   color:'#ff4040', scores:{eco:-100,soc:-100,auth:-80,nat:-70,env:60,reli:-80,dem:-100,geo:-70,tech:-20,sec:-90} },
-  { name:'Parti Animaliste',         color:'#80e080', scores:{eco:-40,soc:-80,auth:-40,nat:-40,env:80,reli:-50,dem:-50,geo:-30,tech:0,sec:-60} },
+  { name:'Parti Communiste',            color:'#c01010', scores:{eco:-95,soc:-50,auth:40,nat:20,env:30,reli:-70,dem:-50,geo:-40,tech:-20,sec:-40} },
+  { name:'Renaissance (Macron)',        color:'#ff9900', scores:{eco:50,soc:-40,auth:20,nat:-50,env:30,reli:-30,dem:20,geo:20,tech:60,sec:30} },
+  { name:'Les Républicains',            color:'#2060c0', scores:{eco:50,soc:50,auth:50,nat:30,env:-20,reli:50,dem:20,geo:20,tech:20,sec:60} },
+  { name:'Rassemblement National',      color:'#1a3a7c', scores:{eco:-20,soc:70,auth:70,nat:95,env:-30,reli:60,dem:-40,geo:40,tech:-10,sec:80} },
+  { name:'Reconquête',                  color:'#0a1a5c', scores:{eco:30,soc:90,auth:80,nat:100,env:-50,reli:80,dem:-20,geo:50,tech:10,sec:90} },
+  { name:'Debout la France',            color:'#003080', scores:{eco:-30,soc:40,auth:50,nat:90,env:0,reli:40,dem:-40,geo:30,tech:0,sec:70} },
+  { name:'Nouveau Centre / UDI',        color:'#70a0e0', scores:{eco:30,soc:-20,auth:10,nat:-20,env:20,reli:20,dem:10,geo:10,tech:30,sec:20} },
+  { name:'NPA / Révolutionnaires',      color:'#ff4040', scores:{eco:-100,soc:-100,auth:-80,nat:-70,env:60,reli:-80,dem:-100,geo:-70,tech:-20,sec:-90} },
+  { name:'Parti Animaliste',            color:'#80e080', scores:{eco:-40,soc:-80,auth:-40,nat:-40,env:80,reli:-50,dem:-50,geo:-30,tech:0,sec:-60} },
 ];
 
 const PENSEURS = [
-  { name:'Karl Marx',          emoji:'📖', desc:'Marxisme, lutte des classes',               match:{eco:-90,soc:-70,auth:30} },
-  { name:'Simone de Beauvoir', emoji:'✊', desc:'Féminisme, existentialisme',               match:{soc:-90,auth:-60,eco:-40} },
-  { name:'Noam Chomsky',       emoji:'🎙️', desc:'Libertaire de gauche, antiimpérialisme',   match:{eco:-80,auth:-80,nat:-80} },
-  { name:'John Maynard Keynes',emoji:'📈', desc:'Relance, État régulateur',                 match:{eco:-60,auth:10} },
-  { name:'Friedrich Hayek',    emoji:'🏦', desc:'Libéralisme classique, anti-étatisme',      match:{eco:90,auth:-70} },
-  { name:'Ayn Rand',           emoji:'🗽', desc:'Objectivisme, capitalisme radical',          match:{eco:100,auth:-80,soc:30} },
-  { name:'Edmund Burke',       emoji:'🏰', desc:'Conservatisme traditionnel',                match:{soc:80,reli:70,auth:40} },
-  { name:'Pierre Bourdieu',    emoji:'🔬', desc:'Sociologie critique, reproduction sociale', match:{eco:-70,soc:-80,dem:-60} },
-  { name:'Murray Bookchin',    emoji:'🌿', desc:'Écologie sociale, anarchisme',              match:{eco:-80,auth:-90,env:80} },
-  { name:'Hannah Arendt',      emoji:'💭', desc:'Totalitarisme, espace public',             match:{auth:-60,dem:-70} },
-  { name:'Jean-Paul Sartre',   emoji:'☕', desc:'Existentialisme, engagement',               match:{eco:-60,soc:-80,auth:-50} },
-  { name:'Greta Thunberg',     emoji:'🌍', desc:'Activisme climatique',                     match:{env:95,auth:-40,eco:-40} },
-  { name:'Jacques Delors',     emoji:'🇪🇺', desc:'Social-démocratie, Europe',               match:{nat:-70,eco:-40,dem:20} },
-  { name:'Jean Jaurès',        emoji:'🌹', desc:'Socialisme humaniste, paix',                match:{eco:-80,soc:-60,nat:-30,auth:-20} },
-  { name:'Marine Le Pen',      emoji:'🔵', desc:'Souverainisme, populisme de droite',        match:{nat:90,soc:70,auth:70} },
+  { name:'Karl Marx',           emoji:'📖', desc:'Marxisme, lutte des classes',              match:{eco:-90,soc:-70,auth:30} },
+  { name:'Simone de Beauvoir',  emoji:'✊', desc:'Féminisme, existentialisme',              match:{soc:-90,auth:-60,eco:-40} },
+  { name:'Noam Chomsky',        emoji:'🎙️', desc:'Libertaire de gauche, antiimpérialisme',  match:{eco:-80,auth:-80,nat:-80} },
+  { name:'John Maynard Keynes', emoji:'📈', desc:'Relance, État régulateur',                match:{eco:-60,auth:10} },
+  { name:'Friedrich Hayek',     emoji:'🏦', desc:'Libéralisme classique, anti-étatisme',     match:{eco:90,auth:-70} },
+  { name:'Ayn Rand',            emoji:'🗽', desc:'Objectivisme, capitalisme radical',         match:{eco:100,auth:-80,soc:30} },
+  { name:'Edmund Burke',        emoji:'🏰', desc:'Conservatisme traditionnel',               match:{soc:80,reli:70,auth:40} },
+  { name:'Pierre Bourdieu',     emoji:'🔬', desc:'Sociologie critique, reproduction sociale',match:{eco:-70,soc:-80,dem:-60} },
+  { name:'Murray Bookchin',     emoji:'🌿', desc:'Écologie sociale, anarchisme',             match:{eco:-80,auth:-90,env:80} },
+  { name:'Hannah Arendt',       emoji:'💭', desc:'Totalitarisme, espace public',            match:{auth:-60,dem:-70} },
+  { name:'Jean-Paul Sartre',    emoji:'☕', desc:'Existentialisme, engagement',              match:{eco:-60,soc:-80,auth:-50} },
+  { name:'Greta Thunberg',      emoji:'🌍', desc:'Activisme climatique',                    match:{env:95,auth:-40,eco:-40} },
+  { name:'Jacques Delors',      emoji:'🇪🇺', desc:'Social-démocratie, Europe',              match:{nat:-70,eco:-40,dem:20} },
+  { name:'Jean Jaurès',         emoji:'🌹', desc:'Socialisme humaniste, paix',               match:{eco:-80,soc:-60,nat:-30,auth:-20} },
+  { name:'Marine Le Pen',       emoji:'🔵', desc:'Souverainisme, populisme de droite',       match:{nat:90,soc:70,auth:70} },
 ];
 
+/* ══════════════════════════════════════════
+   PROFIL
+   ══════════════════════════════════════════ */
 function buildProfile(n) {
   const ecoL=n.eco<-15, ecoR=n.eco>15;
   const socL=n.soc<-15, socR=n.soc>15;
@@ -252,21 +301,24 @@ function buildProfile(n) {
   const envH=n.env>20;
 
   if (ecoL&&socL&&libH&&intH) return { label:'🔴 Libertaire socialiste', title:'Libertaire de gauche', desc:'Tu combines une vision économique collectiviste avec un profond attachement aux libertés individuelles et à la coopération internationale. Proches de toi : Jean Jaurès, Simone Weil, Noam Chomsky.', color:'#e05a5a' };
-  if (ecoL&&socL&&authH) return { label:'🔴 Socialiste autoritaire', title:'Gauche étatiste', desc:'Tu défends une société solidaire fortement organisée par l\'État, avec un rôle central du pouvoir public dans l\'économie et les mœurs. Proches : Marx, Lénine, Jean-Luc Mélenchon.', color:'#c03030' };
-  if (ecoL&&socL&&natH) return { label:'🔴🟤 Gauche nationaliste', title:'Gauche souverainiste', desc:'Tu allies une économie protégée et solidaire à un fort attachement à la nation et aux frontières. Un positionnement rare mais cohérent.', color:'#c06030' };
-  if (ecoR&&socR&&authH&&natH) return { label:'🔵 Droite nationaliste autoritaire', title:'Conservateur nationaliste', desc:'Tu défends le marché libre, les valeurs traditionnelles, une identité nationale forte et un État capable de les imposer. Proche du souverainisme de droite.', color:'#3050c0' };
-  if (ecoR&&socR&&libH) return { label:'🔵 Libéral-conservateur libertaire', title:'Libéral classique', desc:'Marché libre, valeurs traditionnelles mais respect des libertés individuelles. Un libéralisme à l\'anglaise.', color:'#5080d0' };
-  if (ecoR&&socL&&libH) return { label:'🟣 Libéral progressiste', title:'Libéral progressiste', desc:'Tu crois au marché libre et aux libertés individuelles, y compris sociétales. Proches : Emmanuel Macron, Justin Trudeau, courant centriste européen.', color:'#9060d0' };
-  if (ecoL&&envH) return { label:'🟢 Écosocialiste', title:'Gauche écologiste', desc:'L\'urgence écologique et la justice sociale sont pour toi les deux faces d\'un même combat. Proches : Yannick Jadot, Sandrine Rousseau, courant vert européen.', color:'#50b060' };
-  if (ecoR&&envH) return { label:'🟢 Écolo-libéral', title:'Capitalisme vert', desc:'Tu crois que le marché et l\'innovation peuvent résoudre la crise écologique. Un positionnement de droite verte.', color:'#70d080' };
+  if (ecoL&&socL&&authH)      return { label:'🔴 Socialiste autoritaire', title:'Gauche étatiste', desc:'Tu défends une société solidaire fortement organisée par l\'État, avec un rôle central du pouvoir public dans l\'économie et les mœurs. Proches : Marx, Lénine, Jean-Luc Mélenchon.', color:'#c03030' };
+  if (ecoL&&socL&&natH)       return { label:'🔴🟤 Gauche nationaliste', title:'Gauche souverainiste', desc:'Tu allies une économie protégée et solidaire à un fort attachement à la nation et aux frontières. Un positionnement rare mais cohérent.', color:'#c06030' };
+  if (ecoR&&socR&&authH&&natH)return { label:'🔵 Droite nationaliste autoritaire', title:'Conservateur nationaliste', desc:'Tu défends le marché libre, les valeurs traditionnelles, une identité nationale forte et un État capable de les imposer. Proche du souverainisme de droite.', color:'#3050c0' };
+  if (ecoR&&socR&&libH)       return { label:'🔵 Libéral-conservateur libertaire', title:'Libéral classique', desc:'Marché libre, valeurs traditionnelles mais respect des libertés individuelles. Un libéralisme à l\'anglaise.', color:'#5080d0' };
+  if (ecoR&&socL&&libH)       return { label:'🟣 Libéral progressiste', title:'Libéral progressiste', desc:'Tu crois au marché libre et aux libertés individuelles, y compris sociétales. Proches : Emmanuel Macron, Justin Trudeau, courant centriste européen.', color:'#9060d0' };
+  if (ecoL&&envH)             return { label:'🟢 Écosocialiste', title:'Gauche écologiste', desc:'L\'urgence écologique et la justice sociale sont pour toi les deux faces d\'un même combat. Proches : Yannick Jadot, Sandrine Rousseau, courant vert européen.', color:'#50b060' };
+  if (ecoR&&envH)             return { label:'🟢 Écolo-libéral', title:'Capitalisme vert', desc:'Tu crois que le marché et l\'innovation peuvent résoudre la crise écologique. Un positionnement de droite verte.', color:'#70d080' };
   if (Math.abs(n.eco)<20&&Math.abs(n.soc)<20&&Math.abs(n.auth)<20) return { label:'⚪ Centriste pragmatique', title:'Au centre du spectre', desc:'Tu refuses les extrêmes et cherches des solutions pragmatiques cas par cas. Un positionnement majoritaire mais souvent insatisfaisant pour les militants.', color:'#aaaaaa' };
-  if (natH&&socR) return { label:'🟤 Nationaliste conservateur', title:'Droite identitaire', desc:'La nation, la tradition et la protection des frontières sont tes priorités. Proche du courant patriote-conservateur.', color:'#c07030' };
+  if (natH&&socR)             return { label:'🟤 Nationaliste conservateur', title:'Droite identitaire', desc:'La nation, la tradition et la protection des frontières sont tes priorités. Proche du courant patriote-conservateur.', color:'#c07030' };
   const dominant = Object.entries(n).sort((a,b)=>Math.abs(b[1])-Math.abs(a[1]))[0];
   const ax = AXES.find(a=>a.id===dominant[0]);
   const side = dominant[1]>0 ? ax.right : ax.left;
-  return { label:`📍 ${side}`, title:`Profil — ${side}`, desc:`Ton axe dominant est ${ax.icon} ${ax.left} / ${ax.right}. Ton positionnement résiste à une catégorie simple — c\'est souvent signe d\'une pensée nuancée.`, color:'#c8b4ff' };
+  return { label:`📍 ${side}`, title:`Profil — ${side}`, desc:`Ton axe dominant est ${ax.icon} ${ax.left} / ${ax.right}. Ton positionnement résiste à une catégorie simple — c'est souvent signe d'une pensée nuancée.`, color:'#c8b4ff' };
 }
 
+/* ══════════════════════════════════════════
+   RENDU RÉSULTATS
+   ══════════════════════════════════════════ */
 function drawCompass(n) {
   const svg = document.getElementById('compass-svg');
   const cx=150, cy=150, r=110;
@@ -285,25 +337,22 @@ function drawCompass(n) {
     <line x1="${cx-r}" y1="${cy}" x2="${cx+r}" y2="${cy}" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
     <circle cx="${cx}" cy="${cy}" r="${r*.5}" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="1" stroke-dasharray="4,4"/>
   `;
-  [
-    {x:cx-r,y:cy-r,c:'#e05060'},{x:cx,y:cy-r,c:'#3050c0'},
-    {x:cx-r,y:cy,c:'#e05a5a'},{x:cx,y:cy,c:'#5ab4e0'},
-  ].forEach(q=>{
+  [{x:cx-r,y:cy-r,c:'#e05060'},{x:cx,y:cy-r,c:'#3050c0'},{x:cx-r,y:cy,c:'#e05a5a'},{x:cx,y:cy,c:'#5ab4e0'}].forEach(q=>{
     const rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
-    rect.setAttribute('x',q.x);rect.setAttribute('y',q.y);
-    rect.setAttribute('width',r);rect.setAttribute('height',r);
-    rect.setAttribute('fill',q.c);rect.setAttribute('fill-opacity','0.07');
+    rect.setAttribute('x',q.x); rect.setAttribute('y',q.y);
+    rect.setAttribute('width',r); rect.setAttribute('height',r);
+    rect.setAttribute('fill',q.c); rect.setAttribute('fill-opacity','0.07');
     rect.setAttribute('clip-path','url(#circle-clip2)');
     svg.appendChild(rect);
   });
   const x=cx+(n.eco/100)*r, y=cy-(n.auth/100)*r;
   const halo=document.createElementNS('http://www.w3.org/2000/svg','circle');
-  halo.setAttribute('cx',x);halo.setAttribute('cy',y);halo.setAttribute('r',18);
-  halo.setAttribute('fill','#c8b4ff');halo.setAttribute('fill-opacity','0.15');
+  halo.setAttribute('cx',x); halo.setAttribute('cy',y); halo.setAttribute('r',18);
+  halo.setAttribute('fill','#c8b4ff'); halo.setAttribute('fill-opacity','0.15');
   svg.appendChild(halo);
   const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
-  dot.setAttribute('cx',x);dot.setAttribute('cy',y);dot.setAttribute('r',8);
-  dot.setAttribute('fill','#c8b4ff');dot.setAttribute('stroke','#fff');dot.setAttribute('stroke-width','2');
+  dot.setAttribute('cx',x); dot.setAttribute('cy',y); dot.setAttribute('r',8);
+  dot.setAttribute('fill','#c8b4ff'); dot.setAttribute('stroke','#fff'); dot.setAttribute('stroke-width','2');
   svg.appendChild(dot);
 }
 
@@ -402,11 +451,244 @@ function showResults() {
 }
 
 function restart() {
+  clearCache();
   answers.fill(null);
   currentQ=0;
   showScreen('screen-intro');
   window.scrollTo(0,0);
 }
 
-// Init
-buildIntro();
+/* ══════════════════════════════════════════
+   EXPORT IMAGE (Canvas)
+   ══════════════════════════════════════════ */
+function downloadResult() {
+  const n = computeScores();
+  const profile = buildProfile(n);
+
+  const W = 900, H = 500;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // Fond
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, '#0d0d1a');
+  grad.addColorStop(1, '#14142a');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Grille déco
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < W; x += 60) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for (let y = 0; y < H; y += 60) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+  // Bandeau couleur gauche
+  ctx.fillStyle = profile.color + 'cc';
+  ctx.fillRect(0, 0, 6, H);
+
+  // Header
+  ctx.font = '700 11px monospace';
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.fillText('POLITISCALE · POLITILAB', 32, 34);
+
+  // Badge profil
+  ctx.font = '700 15px monospace';
+  const badgeW = ctx.measureText(profile.label).width + 24;
+  ctx.fillStyle = profile.color + '33';
+  _roundRect(ctx, 32, 46, badgeW, 28, 14);
+  ctx.fillStyle = profile.color;
+  ctx.fillText(profile.label, 44, 65);
+
+  // Titre
+  ctx.font = '800 38px serif';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(profile.title, 32, 130);
+
+  // Séparateur horizontal
+  ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(32, 148); ctx.lineTo(W - 32, 148); ctx.stroke();
+
+  // Description (wrappée)
+  ctx.font = '300 13px sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  _wrapText(ctx, profile.desc, 32, 170, 510, 20);
+
+  // ── BOUSSOLE (droite, centrée verticalement) ──
+  const compassCX = 730, compassCY = 180, compassR = 100;
+  _drawCompassCanvas(ctx, n, compassCX, compassCY, compassR);
+
+  // ── AXES (10 en 2 colonnes, bas de carte) ──
+  const colW = 390, axesY = 240, gap = 24;
+  AXES.forEach((ax, i) => {
+    const col = i < 5 ? 0 : 1;
+    const row = i % 5;
+    const x = 32 + col * (colW + gap);
+    const y = axesY + row * 46;
+    const val = n[ax.id];
+    const color = val < 0 ? ax.colorL : ax.colorR;
+    const intensity = Math.abs(val);
+    const label = intensity < 15 ? 'Neutre' : val < 0 ? ax.left : ax.right;
+    const pctStr = Math.round(intensity) + '%';
+
+    // Label gauche
+    ctx.font = '600 10px monospace';
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.textAlign = 'left';
+    ctx.fillText(ax.icon + ' ' + label, x, y);
+
+    // Pourcentage droite
+    ctx.fillStyle = color;
+    ctx.textAlign = 'right';
+    ctx.fillText(pctStr, x + colW, y);
+    ctx.textAlign = 'left';
+
+    // Barre fond
+    ctx.fillStyle = 'rgba(255,255,255,0.07)';
+    _roundRectFill(ctx, x, y + 6, colW, 7, 4);
+
+    // Barre fill depuis centre
+    const half = (intensity / 100) * (colW / 2);
+    const barX = val >= 0 ? x + colW / 2 : x + colW / 2 - half;
+    ctx.fillStyle = color;
+    _roundRectFill(ctx, barX, y + 6, Math.max(half, 2), 7, 4);
+  });
+
+  // Footer
+  ctx.font = '400 10px monospace';
+  ctx.fillStyle = 'rgba(255,255,255,0.18)';
+  ctx.textAlign = 'left';
+  ctx.fillText('politilab.fr · ' + new Date().toLocaleDateString('fr-FR'), 32, H - 16);
+
+  // Téléchargement
+  canvas.toBlob(blob => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'politiscale-' + profile.title.toLowerCase().replace(/\s+/g,'-') + '.png';
+    a.click();
+  });
+}
+
+function _drawCompassCanvas(ctx, n, cx, cy, r) {
+  // Fond cercle
+  const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+  grad.addColorStop(0, '#1a1a2e');
+  grad.addColorStop(1, '#0d0d18');
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fillStyle = grad; ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth = 1; ctx.stroke();
+
+  // Quadrants colorés
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.clip();
+  [{sx:cx-r,sy:cy-r,c:'#e05060'},{sx:cx,sy:cy-r,c:'#3050c0'},{sx:cx-r,sy:cy,c:'#e05a5a'},{sx:cx,sy:cy,c:'#5ab4e0'}]
+    .forEach(q => { ctx.fillStyle = q.c + '18'; ctx.fillRect(q.sx, q.sy, r, r); });
+  ctx.restore();
+
+  // Axes
+  ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(cx, cy-r); ctx.lineTo(cx, cy+r); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx-r, cy); ctx.lineTo(cx+r, cy); ctx.stroke();
+
+  // Labels
+  ctx.font = '600 8px monospace';
+  ctx.fillStyle = 'rgba(255,255,255,0.38)';
+  ctx.textAlign = 'center';
+  ctx.fillText('AUTORITAIRE', cx, cy - r - 5);
+  ctx.fillText('LIBERTAIRE', cx, cy + r + 12);
+  ctx.textAlign = 'right';
+  ctx.fillText('COLL.', cx - r - 3, cy + 3);
+  ctx.textAlign = 'left';
+  ctx.fillText('LIB.', cx + r + 3, cy + 3);
+  ctx.textAlign = 'left';
+
+  // Point utilisateur
+  const px = cx + (n.eco / 100) * r;
+  const py = cy - (n.auth / 100) * r;
+  ctx.beginPath(); ctx.arc(px, py, 13, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(200,180,255,0.15)'; ctx.fill();
+  ctx.beginPath(); ctx.arc(px, py, 6, 0, Math.PI * 2);
+  ctx.fillStyle = '#c8b4ff'; ctx.fill();
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+}
+
+function _roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
+  ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath(); ctx.fill();
+}
+
+function _roundRectFill(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.roundRect(x, y, w, h, r);
+  ctx.fill();
+}
+
+function _wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(' ');
+  let line = '', ly = y;
+  const maxLines = 3;
+  let lineCount = 0;
+  for (let i = 0; i < words.length; i++) {
+    const test = line + words[i] + ' ';
+    if (ctx.measureText(test).width > maxWidth && i > 0) {
+      ctx.fillText(line.trim(), x, ly);
+      line = words[i] + ' ';
+      ly += lineHeight;
+      lineCount++;
+      if (lineCount >= maxLines) { ctx.fillText(line.trim() + '…', x, ly); return; }
+    } else { line = test; }
+  }
+  ctx.fillText(line.trim(), x, ly);
+}
+
+/* ══════════════════════════════════════════
+   INIT
+   ══════════════════════════════════════════ */
+(function init() {
+  buildIntro();
+
+  const hasCached = loadCache();
+  if (!hasCached) return;
+
+  const answered = answers.filter(a => a !== null).length;
+  if (answered === 0) return;
+
+  const banner = document.createElement('div');
+  banner.id = 'cache-banner';
+  banner.style.cssText = [
+    'position:fixed', 'bottom:24px', 'left:50%', 'transform:translateX(-50%)',
+    'background:var(--surface)', 'border:1px solid var(--border2)',
+    'border-radius:12px', 'padding:12px 18px',
+    'display:flex', 'gap:10px', 'align-items:center',
+    'z-index:999', 'box-shadow:0 8px 32px rgba(0,0,0,.5)',
+    'font-size:.82rem', 'white-space:nowrap', 'max-width:90vw',
+  ].join(';');
+
+  const isComplete = answered === QUESTIONS.length;
+  banner.innerHTML = `
+    <span>${isComplete ? '✅' : '💾'} ${answered}/${QUESTIONS.length} réponses sauvegardées</span>
+    <button class="btn btn-primary btn-sm" id="banner-resume">
+      ${isComplete ? 'Voir mes résultats' : 'Reprendre'}
+    </button>
+    <button class="btn btn-ghost btn-sm" id="banner-clear">Effacer</button>
+  `;
+  document.body.appendChild(banner);
+
+  document.getElementById('banner-resume').onclick = () => {
+    banner.remove();
+    if (isComplete) showResults();
+    else startQuiz();
+  };
+  document.getElementById('banner-clear').onclick = () => {
+    clearCache();
+    answers.fill(null);
+    currentQ = 0;
+    banner.remove();
+  };
+})();
