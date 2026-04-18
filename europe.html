@@ -9,40 +9,50 @@
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/nav.css">
   <link rel="stylesheet" href="css/europe.css">
+
+  <!-- Fonts cohérentes avec ton autre page -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
-  <!-- Nav injectée -->
+  <!-- NAV -->
   
   <div class="page-wrap">
 
     <div class="jrn-layout">
 
-      <!-- ── Header ── -->
-      <div class="jrn-header">
-        <div>
-          <h1 class="jrn-title">Mon vote <em class="serif">européen</em></h1>
-          <p class="jrn-sub">Clique sur un pays · Choisis ton parti · Visualise ton influence</p>
-        </div>
-      </div>
+      <!-- ── HEADER ── -->
+      <header class="jrn-header">
+        <h1 class="jrn-title">
+          Mon vote <em>européen</em>
+        </h1>
+        <p class="jrn-sub">
+          Clique sur un pays · Choisis ton parti · Visualise ton influence
+        </p>
+      </header>
 
-      <!-- ── Controls ── -->
+      <!-- ── ACTION BAR ── -->
       <div class="jrn-controls">
         <button class="btn btn-primary" onclick="showResult()">
           🗳 Voir mon résultat
         </button>
+
         <button class="btn btn-ghost" onclick="resetMap()">
           Effacer
         </button>
       </div>
 
-      <!-- ── Map Canvas ── -->
-      <div class="jrn-canvas-wrap">
+      <!-- ── MAIN CARD (MAP) ── -->
+      <section class="jrn-canvas-wrap">
+
         <div class="jrn-canvas-scroller">
 
           <div id="map-section" class="europe-map-wrap">
+
             <svg id="europe-svg" viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg">
-              <rect width="900" height="700" fill="#c9d9e8" rx="12"/>
+              <rect width="900" height="700" fill="#0b0f1a" rx="12"/>
             </svg>
 
             <!-- Tooltip -->
@@ -54,41 +64,50 @@
               <div class="empty-text">Clique sur un pays pour commencer</div>
               <div class="empty-hint">Choisis ensuite un parti politique</div>
             </div>
+
           </div>
 
         </div>
 
-        <!-- Footer -->
+        <!-- FOOTER INFO -->
         <div class="jrn-canvas-footer">
           <span id="info" class="jrn-info">0 pays sélectionnés</span>
           <span class="jrn-hint">🗳 Clique pour voter</span>
         </div>
-      </div>
 
-      <!-- ── Selected Logos ── -->
-      <div class="jrn-suggestions">
-        <div class="jrn-suggestions-label">Partis sélectionnés</div>
-        <div class="jrn-suggestions-list" id="chosen-logos"></div>
-      </div>
+      </section>
+
+      <!-- ── SELECTED PARTIES ── -->
+      <section class="jrn-suggestions">
+
+        <div class="jrn-suggestions-label">
+          Partis sélectionnés
+        </div>
+
+        <div class="jrn-suggestions-list" id="chosen-logos">
+          <!-- JS inject -->
+        </div>
+
+      </section>
 
     </div>
 
   </div>
 
-  <!-- ── Party Modal ── -->
+  <!-- ── MODAL PARTI ── -->
   <div class="modal-bg" id="modal-bg">
     <div class="modal">
 
-      <div class="modal-handle"></div>
       <button class="modal-close" onclick="closeModal()">✕</button>
 
       <div class="modal-country" id="modal-country-name"></div>
+
       <div class="parties-list" id="parties-list"></div>
 
     </div>
   </div>
 
-  <!-- ── Result Modal ── -->
+  <!-- ── RESULT MODAL ── -->
   <div class="result-modal" id="result-modal">
     <div class="result-box">
 
