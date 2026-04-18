@@ -9,6 +9,7 @@
     { href: 'politiscale.html',  icon: '🧭', label: 'PolitiScale' },
     { href: 'politimetre.html',  icon: '🗳️', label: 'Politimètre' },
     { href: 'journey.html',      icon: '📍', label: 'My Journey' },
+    { href: 'europe.html',       icon: '🗺️', label: 'Partis Européens' },
   ];
 
   function getCurrentPage() {
