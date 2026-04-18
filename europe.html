@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon vote européen</title>
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/europe.css">
+</head>
+<body>
+<header>
+  <h1>🗺 Mon vote européen</h1>
+  <p>Clique sur un pays · Choisis ton parti · Le logo apparaît sur la carte</p>
+</header>
+
+<div class="map-section" id="map-section">
+  <svg id="europe-svg" viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg">
+    <rect width="900" height="700" fill="#c9d9e8" rx="8"/>
+  </svg>
+</div>
+
+<div class="summary-bar" id="summary-bar">
+  <div class="chosen-logos" id="chosen-logos"></div>
+  <button class="share-btn" onclick="showResult()">Voir mon résultat 🗳</button>
+</div>
+
+<!-- Party picker modal -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal" style="position:relative">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-country" id="modal-country-name"></div>
+    <div class="parties-list" id="parties-list"></div>
+  </div>
+</div>
+
+<!-- Result modal -->
+<div class="result-modal" id="result-modal">
+  <div class="result-box">
+    <h2>Mes partis soutenus</h2>
+    <div class="result-grid" id="result-grid"></div>
+    <div class="result-btns">
+      <button class="btn-copy" onclick="copyResult()">📋 Copier</button>
+      <button class="btn-close" onclick="closeResult()">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div id="tooltip"></div>
+
+<script src="js/europe.js"></script>
+</body>
+</html>
