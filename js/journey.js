@@ -20,8 +20,8 @@ const SUGGESTIONS = [
 const MAX = 10;
 const CW = 760, CH = 480;
 const MARGIN_L = 30;
-const LABEL_H = 24;
-const MARGIN_TOP = 16;
+const LABEL_H = 36;
+const MARGIN_TOP = 40;
 const MARGIN_BOT = 16;
 const ARROW_TAIL = 50; // longueur de la queue après le dernier bloc
 let blocks = [];
@@ -227,12 +227,17 @@ function redraw() {
     const step = document.createElement('div');
     step.className = 'step';
     step.style.left = p.x + 'px';
-    step.style.top = p.labelY + 'px';
+    step.style.top = p.top + 'px';   // ancré sur l'image, pas sur le label
     step.style.width = p.size + 'px';
+    step.style.position = 'absolute';
 
     const nameDiv = document.createElement('div');
     nameDiv.className = 'step-name';
     nameDiv.style.width = p.size + 'px';
+    nameDiv.style.position = 'absolute';
+    nameDiv.style.bottom = '100%';
+    nameDiv.style.left = '0';
+    nameDiv.style.marginBottom = '2px';
     nameDiv.textContent = blocks[i].name;
 
     const img = document.createElement('img');
