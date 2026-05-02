@@ -144,29 +144,31 @@ async function fetchWikipediaImage(searchName) {
 // La flèche longe le BAS de chaque bloc (y = top + LABEL_H + size)
 // puis monte verticalement avant le prochain bloc
 function getPositions(n) {
-  const TITLE_W = 115; // réserve pour "MY POLITICAL JOURNEY!"
-  const GAP = 4;       // espace entre blocs (évite le chevauchement visuel)
+  const TITLE_W = 115;
+  const GAP = 4;
 
-  // Largeur : n blocs + (n-1) gaps + titre
-  const availW = CW - MARGIN_L - TITLE_W - GAP * (n - 1);
-  const maxSizeByW = Math.floor(availW / n);
+  // Taille max par la largeur (zone hors titre)
+  const zoneW = CW - TITLE_W;
+  const maxSizeByW = Math.floor((zoneW - GAP * (n - 1)) / n);
 
-  // Hauteur : le dernier bloc (le plus haut) doit tenir dans le canvas
-  // top[n-1] = BASE - size - LABEL_H - (n-1)*stepY >= MARGIN_TOP
-  // stepY = size * ratio  →  size * (1 + ratio*(n-1)) <= availV
+  // Taille max par la hauteur
   const availV = CH - MARGIN_BOT - 2 * LABEL_H - MARGIN_TOP;
   const ratio = n <= 3 ? 0.58 : n <= 6 ? 0.45 : 0.34;
   const maxSizeByH = Math.floor(availV / (1 + ratio * (n - 1)));
 
-  const maxAbs = n <= 2 ? 145 : n <= 4 ? 115 : n <= 7 ? 88 : 68;
+  const maxAbs = n <= 2 ? 180 : n <= 4 ? 140 : n <= 7 ? 100 : 72;
   const size = Math.min(maxSizeByW, maxSizeByH, maxAbs);
   const stepY = Math.round(size * ratio);
-  const BASE = CH - MARGIN_BOT - LABEL_H; // y du dessus du bloc 0
+  const BASE = CH - MARGIN_BOT - LABEL_H;
+
+  // Centrer horizontalement les blocs dans la zone (hors titre)
+  const totalW = n * size + (n - 1) * GAP;
+  const startX = Math.round((zoneW - totalW) / 2);
 
   return Array.from({ length: n }, (_, i) => ({
-    x: MARGIN_L + i * (size + GAP),
-    top: BASE - size - i * stepY,      // top du bloc (sans label)
-    labelY: BASE - size - i * stepY - LABEL_H, // top du label
+    x: startX + i * (size + GAP),
+    top: BASE - size - i * stepY,
+    labelY: BASE - size - i * stepY - LABEL_H,
     size,
   }));
 }
@@ -191,23 +193,21 @@ function redraw() {
   const pos = getPositions(n);
 
   // ── Flèche en escalier ──
-  // La ligne longe le bas de chaque bloc, puis monte jusqu'au bas du suivant
-  const ARROW_OFF = 6; // décalage sous le bas du bloc
+  const ARROW_OFF = 6;
   let pts = [];
-  // Départ : gauche du premier bloc
+  // Départ depuis le bord gauche du canvas au niveau du bas du bloc 0
   const p0 = pos[0];
-  pts.push(`${p0.x},${p0.top + p0.size + ARROW_OFF}`);
+  const y0 = p0.top + p0.size + ARROW_OFF;
+  pts.push(`0,${y0}`);
 
   for (let i = 0; i < n; i++) {
     const p = pos[i];
     const yBot = p.top + p.size + ARROW_OFF;
     const xRight = p.x + p.size;
 
-    // Ligne horizontale sous le bloc i
     pts.push(`${xRight},${yBot}`);
 
     if (i < n - 1) {
-      // Ligne verticale jusqu'au niveau du bas du bloc suivant
       const pNext = pos[i + 1];
       const yBotNext = pNext.top + pNext.size + ARROW_OFF;
       pts.push(`${xRight},${yBotNext}`);
@@ -350,7 +350,7 @@ function drawArrowOverlay(ctx, pos) {
   ctx.beginPath();
 
   const p0 = pos[0];
-  ctx.moveTo(p0.x, p0.top + p0.size + ARROW_OFF);
+  ctx.moveTo(0, p0.top + p0.size + ARROW_OFF);
 
   for (let i = 0; i < pos.length; i++) {
     const p = pos[i];
