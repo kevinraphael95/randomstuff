@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,18 +11,16 @@
 </head>
 <body>
 
-  <!-- Nav injected by JS -->
+  <!-- Nav injectée par nav.js -->
 
   <div class="page-wrap">
-
-    <div class="jrn-layout">
+    <div class="jrn-wrap">
 
       <!-- ── Header ── -->
       <div class="jrn-header">
-        <div>
-          <h1 class="jrn-title">My Political <em class="serif">Journey</em></h1>
-          <p class="jrn-sub">Ajoute jusqu'à 10 idéologies · Génère ton poster · Exporte en PNG</p>
-        </div>
+        <div class="jrn-kicker">✦ Outil créatif</div>
+        <h1 class="jrn-title">My Political <em>Journey</em></h1>
+        <p class="jrn-sub">Ajoute jusqu'à 10 idéologies · Génère ton poster · Exporte en PNG</p>
       </div>
 
       <!-- ── Controls ── -->
@@ -42,9 +40,7 @@
           <span id="btn-add-label">Ajouter</span>
         </button>
         <button class="btn btn-ghost" onclick="resetAll()">Effacer</button>
-        <button class="btn btn-export" onclick="exportPNG()">
-          ↓ Export PNG
-        </button>
+        <button class="btn btn-teal" onclick="exportPNG()">↓ Export PNG</button>
       </div>
 
       <!-- ── Canvas ── -->
@@ -54,10 +50,10 @@
             <svg id="arrow-svg" viewBox="0 0 900 480">
               <defs>
                 <marker id="arr" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto">
-                  <polygon points="0 0, 12 4, 0 8" fill="#111"/>
+                  <polygon class="arrow-fill" points="0 0, 12 4, 0 8" fill="#111"/>
                 </marker>
               </defs>
-              <polyline id="stair-line" fill="none" stroke="#111" stroke-width="4" stroke-linejoin="round" marker-end="url(#arr)"/>
+              <polyline id="stair-line" class="arrow-stroke" fill="none" stroke="#111" stroke-width="4" stroke-linejoin="round" marker-end="url(#arr)"/>
             </svg>
             <div id="title-label">MY<br>POLITICAL<br>JOURNEY!</div>
             <div id="empty-state">
@@ -80,7 +76,6 @@
       </div>
 
     </div>
-
   </div>
 
   <script src="js/nav.js"></script>
