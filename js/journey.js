@@ -145,11 +145,18 @@ async function fetchWikipediaImage(searchName) {
 
 // ── Layout ──
 function getPositions(n) {
-  // Garantit que tout tient dans CW x CH sans chevauchement
-  const maxSizeByW = Math.floor((CW - MARGIN_L - ARROW_OVERSHOOT - 20) / n);
+  // Largeur dispo pour les blocs (sans la zone titre à droite)
+  const availW = CW - MARGIN_L - ARROW_OVERSHOOT - 120; // 120 = marge titre JOURNEY
+  const maxSizeByW = Math.floor(availW / n);
+
+  // Hauteur dispo : le premier bloc est en bas, le dernier en haut
+  // top[i] = BASE - size - LABEL_H - i*stepY >= MARGIN_TOP
+  // → stepY*(n-1) <= BASE - size - LABEL_H - MARGIN_TOP
+  // On veut ratio fixe stepY = size * ratio → résoudre en size
+  // size*(1 + ratio*(n-1)) + LABEL_H <= CH - MARGIN_BOT - MARGIN_TOP
   const availV = CH - MARGIN_TOP - LABEL_H - MARGIN_BOT;
-  const ratio = n <= 3 ? 0.7 : n <= 6 ? 0.55 : 0.42;
-  const maxSizeByH = Math.floor(availV / (1 + (n - 1) * ratio));
+  const ratio = n <= 3 ? 0.65 : n <= 6 ? 0.5 : 0.38;
+  const maxSizeByH = Math.floor(availV / (1 + ratio * (n - 1)));
   const maxAbs = n <= 2 ? 160 : n <= 4 ? 130 : n <= 7 ? 100 : 80;
   const size = Math.min(maxSizeByW, maxSizeByH, maxAbs);
   const stepY = Math.round(size * ratio);
@@ -199,15 +206,17 @@ function redraw() {
     step.className = 'step';
     step.style.left = p.x + 'px';
     step.style.top = p.top + 'px';
+    step.style.width = p.size + 'px';
 
     const nameDiv = document.createElement('div');
     nameDiv.className = 'step-name';
-    nameDiv.style.maxWidth = p.size + 'px';
+    nameDiv.style.width = p.size + 'px';
     nameDiv.textContent = blocks[i].name;
 
     const img = document.createElement('img');
     img.className = 'step-img';
-    img.style.width = img.style.height = p.size + 'px';
+    img.style.width = p.size + 'px';
+    img.style.height = p.size + 'px';
     img.src = blocks[i].imgUrl;
     img.alt = blocks[i].name;
 
