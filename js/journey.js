@@ -18,7 +18,7 @@ const SUGGESTIONS = [
 ];
 
 const MAX = 10;
-const CW = 900, CH = 380;
+const CW = 900, CH = 480;
 const MARGIN_L = 40;
 const LABEL_H = 28;
 const MARGIN_TOP = 20;
@@ -145,20 +145,29 @@ async function fetchWikipediaImage(searchName) {
 
 // ── Layout ──
 function getPositions(n) {
-  // Garantit que tout tient dans CW x CH sans chevauchement
-  const maxSizeByW = Math.floor((CW - MARGIN_L - ARROW_OVERSHOOT - 20) / n);
-  const availV = CH - MARGIN_TOP - LABEL_H - MARGIN_BOT;
-  const ratio = n <= 3 ? 0.7 : n <= 6 ? 0.55 : 0.42;
-  const maxSizeByH = Math.floor(availV / (1 + (n - 1) * ratio));
-  const maxAbs = n <= 2 ? 160 : n <= 4 ? 130 : n <= 7 ? 100 : 80;
-  const size = Math.min(maxSizeByW, maxSizeByH, maxAbs);
-  const stepY = Math.round(size * ratio);
   const BASE_BOTTOM = CH - MARGIN_BOT;
 
+  // 🎯 facteur de scale selon le nombre d’éléments
+  const scale = n <= 2 ? 1.6
+              : n <= 4 ? 1.3
+              : n <= 6 ? 1.1
+              : n <= 8 ? 0.95
+              : 0.85;
+
+  const size = Math.floor(120 * scale);
+
+  const maxSizeH = Math.floor((CW - MARGIN_L - 60) / n);
+  const availV = BASE_BOTTOM - LABEL_H - MARGIN_TOP;
+  const maxSizeV = Math.floor(availV / (1 + (n - 1) * 0.35));
+
+  const finalSize = Math.min(size, maxSizeH, maxSizeV);
+
+  const stepY = Math.round(finalSize * (n <= 4 ? 0.55 : 0.35));
+
   return Array.from({ length: n }, (_, i) => ({
-    x: MARGIN_L + i * size,
-    top: BASE_BOTTOM - size - LABEL_H - i * stepY,
-    size,
+    x: MARGIN_L + i * finalSize,
+    top: BASE_BOTTOM - finalSize - LABEL_H - i * stepY,
+    size: finalSize,
     stepY,
   }));
 }
@@ -375,4 +384,3 @@ function download(canvas) {
 initDatalist();
 buildSuggestions();
 redraw();
-
