@@ -18,7 +18,7 @@ const SUGGESTIONS = [
 ];
 
 const MAX = 10;
-const CW = 760, CH = 340;
+const CW = 760, CH = 480;
 const MARGIN_L = 30;
 const LABEL_H = 24;
 const MARGIN_TOP = 16;
@@ -299,7 +299,7 @@ function resetAll() {
 
 // ── Export PNG ──
 function exportPNG() {
-  const SCALE = 2;
+  const SCALE = 3;
   const canvas = document.createElement('canvas');
   canvas.width = CW * SCALE;
   canvas.height = CH * SCALE;
