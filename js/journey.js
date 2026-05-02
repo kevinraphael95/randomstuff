@@ -107,9 +107,9 @@ async function toBase64(url) {
         c.height = img.naturalHeight || 200;
         c.getContext('2d').drawImage(img, 0, 0);
         resolve(c.toDataURL());
-      } catch { resolve(url); }
+      } catch { resolve(null); }
     };
-    img.onerror = () => resolve(url);
+    img.onerror = () => resolve(null);
     setTimeout(() => resolve(url), 6000);
     img.src = url;
   });
