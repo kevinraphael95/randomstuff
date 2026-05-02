@@ -79,6 +79,8 @@
   border: 1px solid var(--border);
   border-radius: var(--r-xl);
   overflow: hidden;
+  width: fit-content;
+  max-width: 100%;
 }
 
 .jrn-canvas-scroller {
