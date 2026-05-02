@@ -18,12 +18,12 @@ const SUGGESTIONS = [
 ];
 
 const MAX = 10;
-const CW = 900, CH = 380;
-const MARGIN_L = 40;
-const LABEL_H = 28;
-const MARGIN_TOP = 20;
-const MARGIN_BOT = 30;
-const ARROW_OVERSHOOT = 40;
+const CW = 760, CH = 340;
+const MARGIN_L = 30;
+const LABEL_H = 24;
+const MARGIN_TOP = 16;
+const MARGIN_BOT = 16;
+const ARROW_TAIL = 50; // longueur de la queue après le dernier bloc
 let blocks = [];
 
 // ── Datalist ──
@@ -116,7 +116,6 @@ async function toBase64(url) {
 }
 
 async function fetchWikipediaImage(searchName) {
-  // Try exact page first
   try {
     const res = await fetch(`https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(searchName)}&prop=pageimages&pithumbsize=300&format=json&origin=*`);
     const data = await res.json();
@@ -125,8 +124,6 @@ async function fetchWikipediaImage(searchName) {
       if (src && !isBadImage(src)) return await toBase64(src);
     }
   } catch {}
-
-  // Search fallback
   try {
     const res = await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchName)}&srlimit=3&format=json&origin=*`);
     const data = await res.json();
@@ -139,34 +136,38 @@ async function fetchWikipediaImage(searchName) {
       }
     }
   } catch {}
-
   return null;
 }
 
 // ── Layout ──
+// Bloc i : x fixe, monte de stepY à chaque pas
+// La flèche longe le BAS de chaque bloc (y = top + LABEL_H + size)
+// puis monte verticalement avant le prochain bloc
 function getPositions(n) {
-  // Largeur dispo pour les blocs (sans la zone titre à droite)
-  const availW = CW - MARGIN_L - ARROW_OVERSHOOT - 120; // 120 = marge titre JOURNEY
+  const TITLE_W = 115; // réserve pour "MY POLITICAL JOURNEY!"
+  const GAP = 4;       // espace entre blocs (évite le chevauchement visuel)
+
+  // Largeur : n blocs + (n-1) gaps + titre
+  const availW = CW - MARGIN_L - TITLE_W - GAP * (n - 1);
   const maxSizeByW = Math.floor(availW / n);
 
-  // Hauteur dispo : le premier bloc est en bas, le dernier en haut
-  // top[i] = BASE - size - LABEL_H - i*stepY >= MARGIN_TOP
-  // → stepY*(n-1) <= BASE - size - LABEL_H - MARGIN_TOP
-  // On veut ratio fixe stepY = size * ratio → résoudre en size
-  // size*(1 + ratio*(n-1)) + LABEL_H <= CH - MARGIN_BOT - MARGIN_TOP
-  const availV = CH - MARGIN_TOP - LABEL_H - MARGIN_BOT;
-  const ratio = n <= 3 ? 0.65 : n <= 6 ? 0.5 : 0.38;
+  // Hauteur : le dernier bloc (le plus haut) doit tenir dans le canvas
+  // top[n-1] = BASE - size - LABEL_H - (n-1)*stepY >= MARGIN_TOP
+  // stepY = size * ratio  →  size * (1 + ratio*(n-1)) <= availV
+  const availV = CH - MARGIN_BOT - 2 * LABEL_H - MARGIN_TOP;
+  const ratio = n <= 3 ? 0.58 : n <= 6 ? 0.45 : 0.34;
   const maxSizeByH = Math.floor(availV / (1 + ratio * (n - 1)));
-  const maxAbs = n <= 2 ? 160 : n <= 4 ? 130 : n <= 7 ? 100 : 80;
+
+  const maxAbs = n <= 2 ? 145 : n <= 4 ? 115 : n <= 7 ? 88 : 68;
   const size = Math.min(maxSizeByW, maxSizeByH, maxAbs);
   const stepY = Math.round(size * ratio);
-  const BASE_BOTTOM = CH - MARGIN_BOT;
+  const BASE = CH - MARGIN_BOT - LABEL_H; // y du dessus du bloc 0
 
   return Array.from({ length: n }, (_, i) => ({
-    x: MARGIN_L + i * size,
-    top: BASE_BOTTOM - size - LABEL_H - i * stepY,
+    x: MARGIN_L + i * (size + GAP),
+    top: BASE - size - i * stepY,      // top du bloc (sans label)
+    labelY: BASE - size - i * stepY - LABEL_H, // top du label
     size,
-    stepY,
   }));
 }
 
@@ -188,24 +189,45 @@ function redraw() {
 
   emptyState.classList.add('hidden');
   const pos = getPositions(n);
-  const ARROW_OFFSET = 8, SIDE_OVERSHOOT = 14;
+
+  // ── Flèche en escalier ──
+  // La ligne longe le bas de chaque bloc, puis monte jusqu'au bas du suivant
+  const ARROW_OFF = 6; // décalage sous le bas du bloc
   let pts = [];
-  pos.forEach((p, i) => {
-    const y = p.top + LABEL_H + p.size + ARROW_OFFSET;
-    if (i === 0) pts.push(`${p.x - SIDE_OVERSHOOT},${y}`);
-    pts.push(`${p.x + p.size + SIDE_OVERSHOOT},${y}`);
-    if (i < n - 1) pts.push(`${p.x + p.size + SIDE_OVERSHOOT},${pos[i+1].top + LABEL_H + pos[i+1].size + ARROW_OFFSET}`);
-  });
+  // Départ : gauche du premier bloc
+  const p0 = pos[0];
+  pts.push(`${p0.x},${p0.top + p0.size + ARROW_OFF}`);
+
+  for (let i = 0; i < n; i++) {
+    const p = pos[i];
+    const yBot = p.top + p.size + ARROW_OFF;
+    const xRight = p.x + p.size;
+
+    // Ligne horizontale sous le bloc i
+    pts.push(`${xRight},${yBot}`);
+
+    if (i < n - 1) {
+      // Ligne verticale jusqu'au niveau du bas du bloc suivant
+      const pNext = pos[i + 1];
+      const yBotNext = pNext.top + pNext.size + ARROW_OFF;
+      pts.push(`${xRight},${yBotNext}`);
+    }
+  }
+
+  // Queue finale horizontale
   const last = pos[n - 1];
-  const lastY = last.top + LABEL_H + last.size + ARROW_OFFSET;
-  pts.push(`${Math.min(last.x + last.size + ARROW_OVERSHOOT + 30, CW - 10)},${lastY}`);
+  const lastY = last.top + last.size + ARROW_OFF;
+  const arrowEndX = Math.min(last.x + last.size + ARROW_TAIL, CW - 10);
+  pts.push(`${arrowEndX},${lastY}`);
+
   stairLine.setAttribute('points', pts.join(' '));
 
+  // ── Blocs DOM ──
   pos.forEach((p, i) => {
     const step = document.createElement('div');
     step.className = 'step';
     step.style.left = p.x + 'px';
-    step.style.top = p.top + 'px';
+    step.style.top = p.labelY + 'px';
     step.style.width = p.size + 'px';
 
     const nameDiv = document.createElement('div');
@@ -239,7 +261,6 @@ async function addIdeology() {
   const name = raw.slice(0, 40);
   if (!name) return;
 
-  // Check duplicate
   if (blocks.some(b => b.name === name || b.name === '⭐ ' + name)) {
     searchInput.value = '';
     charCount.textContent = '0/40';
@@ -252,10 +273,8 @@ async function addIdeology() {
   btn.disabled = true;
   searchInput.disabled = true;
 
-  // Try to find in known list
   const knownName = IDEOLOGIES_LIST.find(n => n.toLowerCase() === name.toLowerCase()) || name;
   const imgUrl = (await fetchWikipediaImage(knownName)) || placeholderDataURL(knownName);
-
   const displayName = IDEOLOGIES_LIST.find(n => n.toLowerCase() === name.toLowerCase())
     ? knownName
     : '⭐ ' + name;
@@ -287,14 +306,10 @@ function exportPNG() {
   const ctx = canvas.getContext('2d');
   ctx.scale(SCALE, SCALE);
 
-  // Background
   ctx.fillStyle = '#f5f4ef';
   ctx.fillRect(0, 0, CW, CH);
 
-  if (!blocks.length) {
-    download(canvas);
-    return;
-  }
+  if (!blocks.length) { download(canvas); return; }
 
   const pos = getPositions(blocks.length);
   let pending = blocks.length;
@@ -308,56 +323,55 @@ function exportPNG() {
   };
 
   pos.forEach((p, i) => {
-    // Label
     ctx.fillStyle = '#111';
-    ctx.font = `bold 9px "DM Sans", Arial`;
+    ctx.font = `bold 9px Arial`;
     ctx.textBaseline = 'top';
     ctx.textAlign = 'left';
     let label = blocks[i].name;
     while (ctx.measureText(label).width > p.size - 4 && label.length > 1) label = label.slice(0, -1);
-    ctx.fillText(label, p.x, p.top);
+    ctx.fillText(label, p.x, p.labelY);
 
-    // Image placeholder
     ctx.fillStyle = '#cc0000';
-    ctx.fillRect(p.x, p.top + LABEL_H, p.size, p.size);
+    ctx.fillRect(p.x, p.top, p.size, p.size);
 
     const img = new Image();
-    img.onload = () => {
-      ctx.drawImage(img, p.x, p.top + LABEL_H, p.size, p.size);
-      checkDone();
-    };
+    img.onload = () => { ctx.drawImage(img, p.x, p.top, p.size, p.size); checkDone(); };
     img.onerror = checkDone;
     img.src = blocks[i].imgUrl;
   });
 }
 
 function drawArrowOverlay(ctx, pos) {
-  const ARROW_OFFSET = 8, SIDE_OVERSHOOT = 14;
+  const ARROW_OFF = 6;
   ctx.strokeStyle = '#111';
   ctx.lineWidth = 4;
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';
   ctx.beginPath();
-  pos.forEach((p, i) => {
-    const y = p.top + LABEL_H + p.size + ARROW_OFFSET;
-    const xL = p.x - SIDE_OVERSHOOT;
-    const xR = p.x + p.size + SIDE_OVERSHOOT;
-    if (i === 0) ctx.moveTo(xL, y);
-    ctx.lineTo(xR, y);
-    if (i < pos.length - 1) ctx.lineTo(xR, pos[i+1].top + LABEL_H + pos[i+1].size + ARROW_OFFSET);
-  });
+
+  const p0 = pos[0];
+  ctx.moveTo(p0.x, p0.top + p0.size + ARROW_OFF);
+
+  for (let i = 0; i < pos.length; i++) {
+    const p = pos[i];
+    const yBot = p.top + p.size + ARROW_OFF;
+    ctx.lineTo(p.x + p.size, yBot);
+    if (i < pos.length - 1) {
+      ctx.lineTo(p.x + p.size, pos[i+1].top + pos[i+1].size + ARROW_OFF);
+    }
+  }
+
   const last = pos[pos.length - 1];
-  const lastY = last.top + LABEL_H + last.size + ARROW_OFFSET;
-  const arrowEnd = Math.min(last.x + last.size + ARROW_OVERSHOOT + 30, CW - 10);
-  ctx.lineTo(arrowEnd - 18, lastY);
+  const lastY = last.top + last.size + ARROW_OFF;
+  const arrowEnd = Math.min(last.x + last.size + ARROW_TAIL, CW - 10);
+  ctx.lineTo(arrowEnd - 16, lastY);
   ctx.stroke();
 
-  // Arrowhead
-  const hl = 18;
+  // Tête de flèche
   ctx.beginPath();
   ctx.moveTo(arrowEnd, lastY);
-  ctx.lineTo(arrowEnd - hl, lastY - hl * 0.5);
-  ctx.lineTo(arrowEnd - hl, lastY + hl * 0.5);
+  ctx.lineTo(arrowEnd - 16, lastY - 8);
+  ctx.lineTo(arrowEnd - 16, lastY + 8);
   ctx.closePath();
   ctx.fillStyle = '#111';
   ctx.fill();
@@ -365,12 +379,12 @@ function drawArrowOverlay(ctx, pos) {
 
 function drawTitle(ctx) {
   ctx.fillStyle = '#7a0000';
-  ctx.font = `800 30px "Syne", "Impact", Arial Black, sans-serif`;
+  ctx.font = `800 26px "Impact", Arial Black, sans-serif`;
   ctx.textAlign = 'right';
   ctx.textBaseline = 'bottom';
-  ctx.fillText('MY', CW - 24, CH - 20 - 62);
-  ctx.fillText('POLITICAL', CW - 24, CH - 20 - 31);
-  ctx.fillText('JOURNEY!', CW - 24, CH - 20);
+  ctx.fillText('MY', CW - 20, CH - 14 - 54);
+  ctx.fillText('POLITICAL', CW - 20, CH - 14 - 27);
+  ctx.fillText('JOURNEY!', CW - 20, CH - 14);
 }
 
 function download(canvas) {
