@@ -139,6 +139,11 @@
   color: #111; white-space: normal;
   word-break: break-word; margin-bottom: 2px;
   line-height: 1.2; max-width: 100%;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  max-height: 22px; /* 2 × 9px × 1.2 lh ≈ 21.6px */
 }
 .step-img {
   object-fit: cover; display: block;
