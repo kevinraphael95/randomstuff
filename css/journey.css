@@ -88,7 +88,7 @@
 
 #journey {
   position: relative;
-  width: 900px; height: 480px;
+  width: 900px; height: 380px;
   background: #f5f4ef;
   flex-shrink: 0;
 }
