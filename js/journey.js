@@ -18,7 +18,7 @@ const SUGGESTIONS = [
 ];
 
 const MAX = 10;
-const CW = 900, CH = 480;
+const CW = 900, CH = 380;
 const MARGIN_L = 40;
 const LABEL_H = 28;
 const MARGIN_TOP = 20;
@@ -107,9 +107,9 @@ async function toBase64(url) {
         c.height = img.naturalHeight || 200;
         c.getContext('2d').drawImage(img, 0, 0);
         resolve(c.toDataURL());
-      } catch { resolve(url); }
+      } catch { resolve(null); }
     };
-    img.onerror = () => resolve(url);
+    img.onerror = () => resolve(null);
     setTimeout(() => resolve(url), 6000);
     img.src = url;
   });
@@ -145,29 +145,27 @@ async function fetchWikipediaImage(searchName) {
 
 // ── Layout ──
 function getPositions(n) {
+  // Largeur dispo pour les blocs (sans la zone titre à droite)
+  const availW = CW - MARGIN_L - ARROW_OVERSHOOT - 120; // 120 = marge titre JOURNEY
+  const maxSizeByW = Math.floor(availW / n);
+
+  // Hauteur dispo : le premier bloc est en bas, le dernier en haut
+  // top[i] = BASE - size - LABEL_H - i*stepY >= MARGIN_TOP
+  // → stepY*(n-1) <= BASE - size - LABEL_H - MARGIN_TOP
+  // On veut ratio fixe stepY = size * ratio → résoudre en size
+  // size*(1 + ratio*(n-1)) + LABEL_H <= CH - MARGIN_BOT - MARGIN_TOP
+  const availV = CH - MARGIN_TOP - LABEL_H - MARGIN_BOT;
+  const ratio = n <= 3 ? 0.65 : n <= 6 ? 0.5 : 0.38;
+  const maxSizeByH = Math.floor(availV / (1 + ratio * (n - 1)));
+  const maxAbs = n <= 2 ? 160 : n <= 4 ? 130 : n <= 7 ? 100 : 80;
+  const size = Math.min(maxSizeByW, maxSizeByH, maxAbs);
+  const stepY = Math.round(size * ratio);
   const BASE_BOTTOM = CH - MARGIN_BOT;
 
-  // 🎯 facteur de scale selon le nombre d’éléments
-  const scale = n <= 2 ? 1.6
-              : n <= 4 ? 1.3
-              : n <= 6 ? 1.1
-              : n <= 8 ? 0.95
-              : 0.85;
-
-  const size = Math.floor(120 * scale);
-
-  const maxSizeH = Math.floor((CW - MARGIN_L - 60) / n);
-  const availV = BASE_BOTTOM - LABEL_H - MARGIN_TOP;
-  const maxSizeV = Math.floor(availV / (1 + (n - 1) * 0.35));
-
-  const finalSize = Math.min(size, maxSizeH, maxSizeV);
-
-  const stepY = Math.round(finalSize * (n <= 4 ? 0.55 : 0.35));
-
   return Array.from({ length: n }, (_, i) => ({
-    x: MARGIN_L + i * finalSize,
-    top: BASE_BOTTOM - finalSize - LABEL_H - i * stepY,
-    size: finalSize,
+    x: MARGIN_L + i * size,
+    top: BASE_BOTTOM - size - LABEL_H - i * stepY,
+    size,
     stepY,
   }));
 }
@@ -208,15 +206,17 @@ function redraw() {
     step.className = 'step';
     step.style.left = p.x + 'px';
     step.style.top = p.top + 'px';
+    step.style.width = p.size + 'px';
 
     const nameDiv = document.createElement('div');
     nameDiv.className = 'step-name';
-    nameDiv.style.maxWidth = p.size + 'px';
+    nameDiv.style.width = p.size + 'px';
     nameDiv.textContent = blocks[i].name;
 
     const img = document.createElement('img');
     img.className = 'step-img';
-    img.style.width = img.style.height = p.size + 'px';
+    img.style.width = p.size + 'px';
+    img.style.height = p.size + 'px';
     img.src = blocks[i].imgUrl;
     img.alt = blocks[i].name;
 
