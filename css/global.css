@@ -26,14 +26,14 @@
 
 /* ── DARK THEME (default) ── */
 [data-theme="dark"] {
-  --bg:        #0b0b0f;
-  --bg2:       #111118;
-  --surface:   #16161e;
-  --surface2:  #1e1e28;
-  --surface3:  #262633;
-  --border:    rgba(255,255,255,.07);
-  --border2:   rgba(255,255,255,.13);
-  --border3:   rgba(255,255,255,.22);
+  --bg:        #1a1a24;
+  --bg2:       #1f1f2e;
+  --surface:   #242433;
+  --surface2:  #2c2c3e;
+  --surface3:  #353548;
+  --border:    rgba(255,255,255,.08);
+  --border2:   rgba(255,255,255,.15);
+  --border3:   rgba(255,255,255,.25);
 
   --text:      #f0eef8;
   --text2:     #b8b4cc;
