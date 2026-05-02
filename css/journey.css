@@ -5,7 +5,7 @@
 .jrn-wrap {
   max-width: 1080px;
   margin: 0 auto;
-  padding: calc(var(--nav-h) + 8px) 28px 80px;
+  padding: calc(var(--nav-h) + 24px) 28px 80px;
   display: flex; flex-direction: column; gap: 24px;
 }
 
@@ -84,13 +84,11 @@
 .jrn-canvas-scroller {
   overflow-x: auto; overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
-  display: flex;
 }
 
 #journey {
   position: relative;
   width: 900px; height: 480px;
-  min-width: 100%;
   background: #f5f4ef;
   flex-shrink: 0;
 }
@@ -189,23 +187,9 @@
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
-  .jrn-wrap { padding: calc(var(--nav-h) + 8px) 16px 60px; gap: 18px; }
+  .jrn-wrap { padding: calc(var(--nav-h) + 16px) 16px 60px; gap: 18px; }
   .jrn-controls { flex-direction: column; align-items: stretch; }
   .jrn-input-wrap { min-width: 100%; }
   .btn { width: 100%; justify-content: center; }
   .jrn-canvas-footer { flex-direction: column; align-items: flex-start; gap: 4px; }
-
-  /* Scale canvas to fit mobile width */
-  .jrn-canvas-scroller {
-    overflow-x: hidden;
-  }
-  #journey {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 900 / 480;
-    min-width: unset;
-  }
-  #journey #arrow-svg {
-    viewBox: 0 0 900 480;
-  }
 }
