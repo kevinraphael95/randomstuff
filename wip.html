@@ -14,17 +14,51 @@
   <div class="page-wrap">
     <div class="jrn-wrap">
 
-      <!-- Header -->
-      <div class="jrn-header" style="text-align:center; margin-top:80px;">
+      <!-- ── Header (en haut, comme tu voulais) ── -->
+      <div class="jrn-header">
         <h1 class="jrn-title">Page <em>en travaux</em></h1>
         <p class="jrn-sub">Cette fonctionnalité est actuellement en cours de développement</p>
       </div>
 
-      <!-- Centre -->
-      <div style="text-align:center; margin-top:80px;">
-        <div style="font-size:64px;">🚧</div>
-        <div style="margin-top:16px; opacity:0.7;">
-          Reviens bientôt pour découvrir cette page
+      <!-- ── Bloc central stylisé ── -->
+      <div style="
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        margin-top:80px;
+      ">
+        <div style="
+          text-align:center;
+          padding:40px;
+          border-radius:20px;
+          background:rgba(255,255,255,0.04);
+          backdrop-filter:blur(10px);
+          border:1px solid rgba(255,255,255,0.08);
+          max-width:360px;
+        ">
+
+          <div style="
+            width:90px;
+            height:90px;
+            margin:0 auto 20px auto;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:40px;
+            background:rgba(255,255,255,0.06);
+          ">
+            🚧
+          </div>
+
+          <div style="font-size:18px; margin-bottom:10px;">
+            Page en construction
+          </div>
+
+          <div style="opacity:0.7; font-size:14px;">
+            Cette fonctionnalité est en cours de développement
+          </div>
+
         </div>
       </div>
 
