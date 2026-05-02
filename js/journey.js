@@ -193,9 +193,9 @@ function redraw() {
   const pos = getPositions(n);
 
   // ── Flèche en escalier ──
-  const ARROW_OFF = 6;
+  const ARROW_OFF = 6; // décalage sous le bas du bloc
+  const ARROW_SIDE = 6; // décalage à droite du bord droit du bloc
   let pts = [];
-  // Départ depuis le bord gauche du canvas au niveau du bas du bloc 0
   const p0 = pos[0];
   const y0 = p0.top + p0.size + ARROW_OFF;
   pts.push(`0,${y0}`);
@@ -203,7 +203,7 @@ function redraw() {
   for (let i = 0; i < n; i++) {
     const p = pos[i];
     const yBot = p.top + p.size + ARROW_OFF;
-    const xRight = p.x + p.size;
+    const xRight = p.x + p.size + ARROW_SIDE;
 
     pts.push(`${xRight},${yBot}`);
 
@@ -343,6 +343,7 @@ function exportPNG() {
 
 function drawArrowOverlay(ctx, pos) {
   const ARROW_OFF = 6;
+  const ARROW_SIDE = 6;
   ctx.strokeStyle = '#111';
   ctx.lineWidth = 4;
   ctx.lineJoin = 'round';
@@ -355,9 +356,10 @@ function drawArrowOverlay(ctx, pos) {
   for (let i = 0; i < pos.length; i++) {
     const p = pos[i];
     const yBot = p.top + p.size + ARROW_OFF;
-    ctx.lineTo(p.x + p.size, yBot);
+    const xRight = p.x + p.size + ARROW_SIDE;
+    ctx.lineTo(xRight, yBot);
     if (i < pos.length - 1) {
-      ctx.lineTo(p.x + p.size, pos[i+1].top + pos[i+1].size + ARROW_OFF);
+      ctx.lineTo(xRight, pos[i+1].top + pos[i+1].size + ARROW_OFF);
     }
   }
 
