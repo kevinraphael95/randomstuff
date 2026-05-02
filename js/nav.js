@@ -6,10 +6,10 @@
   'use strict';
 
   const NAV_ITEMS = [
-    { href: 'politiscale.html', icon: '🧭', label: 'PolitiScale' },
-    { href: 'politimetre.html', icon: '🗳️', label: 'Politimètre' },
+    { href: 'wip.html', icon: '🧭', label: 'PolitiScale' },
+    { href: 'wip.html', icon: '🗳️', label: 'Politimètre' },
     { href: 'journey.html',     icon: '📍', label: 'My Journey' },
-    { href: 'europe.html',      icon: '🗺️', label: 'Partis Européens' },
+    { href: 'wip.html',      icon: '🗺️', label: 'Partis Européens' },
   ];
 
   /* ── Theme ── */
