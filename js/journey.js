@@ -384,26 +384,3 @@ function download(canvas) {
 initDatalist();
 buildSuggestions();
 redraw();
-
-// ── Mobile scale ──
-function applyMobileScale() {
-  const container = document.getElementById('journey');
-  const wrapper = container.parentElement;
-  const available = wrapper.clientWidth;
-  if (available > 0 && available < CW) {
-    const scale = available / CW;
-    container.style.transform = `scale(${scale})`;
-    container.style.transformOrigin = 'top left';
-    container.style.width = CW + 'px';
-    container.style.height = CH + 'px';
-    wrapper.style.height = Math.round(CH * scale) + 'px';
-  } else {
-    container.style.transform = '';
-    container.style.width = '';
-    container.style.height = '';
-    wrapper.style.height = '';
-  }
-}
-
-applyMobileScale();
-window.addEventListener('resize', applyMobileScale);
