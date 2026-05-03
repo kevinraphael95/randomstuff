@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon Vote Européen — PolitiLab</title>
+  <meta name="description" content="Clique sur les pays, choisis tes partis et génère une carte de ton vote européen.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/europe.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+  <!-- Nav injectée par nav.js -->
+
+  <div class="page-wrap">
+    <div class="eu-page">
+
+      <!-- ── Header ── -->
+      <div class="eu-header">
+        <div>
+          <h1 class="eu-title">Mon Vote <em>Européen</em></h1>
+          <p class="eu-sub">Clique sur un pays · Choisis ton parti · Exporte l'image</p>
+        </div>
+        <div class="eu-header-btns">
+          <button class="btn btn-ghost" onclick="resetMap()">Effacer</button>
+          <button class="btn btn-primary" id="btn-export" onclick="exportPNG()">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <path d="M8 2v8M5 7l3 3 3-3M2 12h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Export PNG
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Map ── -->
+      <div class="eu-map-outer" id="map-outer">
+        <div class="eu-canvas" id="eu-canvas">
+          <svg id="europe-svg" viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg">
+            <rect width="900" height="700" fill="#1a2744"/>
+          </svg>
+          <div id="logo-layer"></div>
+          <div class="eu-watermark">PolitiLab · Mon Vote Européen</div>
+        </div>
+        <div id="eu-tip" class="eu-tip"></div>
+        <div id="empty-hint" class="eu-empty">
+          <div class="eu-empty-icon">🗺️</div>
+          <div class="eu-empty-text">Clique sur un pays pour voter</div>
+        </div>
+      </div>
+
+      <!-- ── Bottom bar ── -->
+      <div class="eu-footer-bar">
+        <span id="eu-count" class="eu-count">0 pays sélectionnés</span>
+        <span class="eu-legend">
+          <span class="eu-leg-dot" style="background:#2f4070"></span> Non voté&nbsp;&nbsp;
+          <span class="eu-leg-dot" style="background:#1d5c42"></span> Voté
+        </span>
+      </div>
+
+      <!-- ── Strip ── -->
+      <div class="eu-strip">
+        <div class="eu-strip-label">Mes partis sélectionnés</div>
+        <div class="eu-strip-list" id="eu-strip-list">
+          <span class="eu-strip-empty">Aucun pays sélectionné pour l'instant</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Modal ── -->
+  <div class="eu-modal-bg" id="modal-bg">
+    <div class="eu-modal" id="modal">
+      <div class="eu-modal-handle"></div>
+      <button class="eu-modal-close" onclick="closeModal()">✕</button>
+      <div class="eu-modal-country" id="modal-country"></div>
+      <div class="eu-modal-grid" id="modal-grid"></div>
+    </div>
+  </div>
+
+  <script src="js/nav.js"></script>
+  <script src="js/europe.js"></script>
+</body>
+</html>
