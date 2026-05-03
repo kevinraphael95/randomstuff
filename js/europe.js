@@ -157,10 +157,9 @@ function vote(code, i) {
 function updateLogoOverlays() {
   logoLayer.innerHTML = "";
 
-  const svg = document.getElementById("europe-svg");
-  const rect = svg.getBoundingClientRect();
-  const vb = svg.viewBox.baseVal;
-
+  const svgEl = document.getElementById("europe-svg");
+  const vb = svgEl.viewBox.baseVal;
+  const rect = svgEl.getBoundingClientRect();
   const scaleX = rect.width / vb.width;
   const scaleY = rect.height / vb.height;
 
@@ -169,21 +168,15 @@ function updateLogoOverlays() {
     if (!path) continue;
 
     const bbox = path.getBBox();
-
     const x = (bbox.x + bbox.width / 2) * scaleX;
     const y = (bbox.y + bbox.height / 2) * scaleY;
 
     const div = document.createElement("div");
     div.className = "eu-logo";
+    div.style.left = x + "px";
+    div.style.top = y + "px";
 
-    div.style.left = rect.left + x + "px";
-    div.style.top = rect.top + y + "px";
-
-    div.innerHTML = `
-      <div class="eu-logo-fallback">🏛</div>
-      <div class="eu-logo-name">${p.name}</div>
-    `;
-
+    div.innerHTML = `<div class="eu-logo-name">${p.name}</div>`;
     logoLayer.appendChild(div);
   }
 }
