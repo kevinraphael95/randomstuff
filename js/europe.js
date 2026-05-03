@@ -158,6 +158,9 @@ function updateLogoOverlays() {
   logoLayer.innerHTML = "";
 
   const svgEl = document.getElementById("europe-svg");
+  const ctm = svgEl.getScreenCTM();
+  if (!ctm) return;
+
   const pt = svgEl.createSVGPoint();
 
   for (const [code, p] of Object.entries(votes)) {
@@ -169,7 +172,7 @@ function updateLogoOverlays() {
     pt.x = bbox.x + bbox.width / 2;
     pt.y = bbox.y + bbox.height / 2;
 
-    const screen = pt.matrixTransform(svgEl.getScreenCTM());
+    const screen = pt.matrixTransform(ctm);
 
     const div = document.createElement("div");
     div.className = "eu-logo";
