@@ -104,35 +104,40 @@ modalBg.addEventListener("click", e => {
 function renderParties(code) {
   const list = PARTIES[code] || [];
 
-  modalGrid.innerHTML = list.map((p, i) => {
+  modalGrid.innerHTML = "";
+
+  list.forEach((p, i) => {
     const chosen = votes[code]?.name === p.name;
     const col = ORIENT_COLOR[p.orient] || "#888";
 
-    return `
-      <button class="eu-party-btn ${chosen ? "chosen" : ""}"
-        onclick="vote('${code}', ${i})">
+    const btn = document.createElement("button");
+    btn.className = "eu-party-btn";
+    if (chosen) btn.classList.add("chosen");
 
-        ${
-          p.logo
-            ? `<img src="${p.logo}" onerror="this.style.display='none'">`
-            : `<div class="eu-party-orient">🏛</div>`
-        }
+    btn.addEventListener("click", () => vote(code, i));
 
-        <div class="eu-pname">${p.name}</div>
-        <div class="eu-party-orient" style="background:${col}">
-          ${p.orient}
-        </div>
+    btn.innerHTML = `
+      ${
+        p.logo
+          ? `<img src="${p.logo}" onerror="this.style.display='none'">`
+          : `<div class="eu-party-orient">🏛</div>`
+      }
 
-      </button>
+      <div class="eu-pname">${p.name}</div>
+      <div class="eu-party-orient" style="background:${col}">
+        ${p.orient}
+      </div>
     `;
-  }).join("");
+
+    modalGrid.appendChild(btn);
+  });
 }
 
 
 /* ── VOTE ── */
 
 function vote(code, i) {
-  const p = PARTIES[code][i];
+  const p = PARTIES?.[code]?.[i]; if (!p) return;
 
   if (votes[code]?.name === p.name) {
     delete votes[code];
@@ -150,33 +155,32 @@ function vote(code, i) {
 /* ── LOGOS OVER MAP ── */
 
 function updateLogoOverlays() {
-  document.querySelectorAll(".eu-logo").forEach(e => e.remove());
+  logoLayer.innerHTML = "";
 
-  const svgRect = svg.getBoundingClientRect();
-  const secRect = section.getBoundingClientRect();
-
-  const scaleX = svgRect.width / 900;
-  const scaleY = svgRect.height / 700;
+  const svgEl = document.getElementById("europe-svg");
+  const pt = svgEl.createSVGPoint();
 
   for (const [code, p] of Object.entries(votes)) {
     const pos = LABEL_POS[code];
     if (!pos) continue;
 
-    const [x, y] = pos;
+    pt.x = pos[0];
+    pt.y = pos[1];
+
+    const screen = pt.matrixTransform(svgEl.getScreenCTM());
 
     const div = document.createElement("div");
     div.className = "eu-logo";
 
-    div.style.left = x * scaleX + svgRect.left - secRect.left + "px";
-    div.style.top = y * scaleY + svgRect.top - secRect.top + "px";
+    div.style.left = screen.x + "px";
+    div.style.top = screen.y + "px";
 
-    div.innerHTML = p.logo
-      ? `<img src="${p.logo}" onerror="this.outerHTML='<div class=eu-logo-fallback>🏛</div>'">`
-      : `<div class="eu-logo-fallback">🏛</div>`;
+    div.innerHTML = `
+      <div class="eu-logo-fallback">🏛</div>
+      <div class="eu-logo-name">${p.name}</div>
+    `;
 
-    div.innerHTML += `<div class="eu-logo-name">${p.name}</div>`;
-
-    section.appendChild(div);
+    document.getElementById("logo-layer").appendChild(div);
   }
 }
 
@@ -246,17 +250,33 @@ function renderAll() {
   updateCount();
 }
 
+function waitImages() {
+  const imgs = document.querySelectorAll("img");
+  return Promise.all([...imgs].map(img => {
+    if (img.complete) return;
+    return new Promise(r => {
+      img.onload = img.onerror = r;
+    });
+  }));
+}
 
 /* ── EXPORT ── */
 
-function exportPNG() {
-  html2canvas(document.getElementById("eu-canvas"))
-    .then(canvas => {
-      const a = document.createElement("a");
-      a.download = "vote-europe.png";
-      a.href = canvas.toDataURL();
-      a.click();
-    });
+async function exportPNG() {
+  await waitImages();
+
+  const el = document.getElementById("eu-canvas");
+
+  html2canvas(el, {
+    backgroundColor: "#eaf0ff",
+    useCORS: true,
+    scale: 2
+  }).then(canvas => {
+    const a = document.createElement("a");
+    a.download = "vote-europe.png";
+    a.href = canvas.toDataURL("image/png");
+    a.click();
+  });
 }
 
 
