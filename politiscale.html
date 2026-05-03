@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +11,7 @@
 </head>
 <body>
 
-  <!-- Nav injected by JS -->
+  <!-- Nav injectée par nav.js -->
 
   <div class="page-wrap">
 
@@ -37,7 +37,7 @@
       <div class="quiz-top">
         <div class="quiz-logo">PolitiScale</div>
         <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
-        <div class="progress-label" id="progress-label">0 / 80</div>
+        <div class="progress-label mono" id="progress-label">0 / 80</div>
       </div>
       <div class="quiz-body">
         <div class="domaine-chip" id="q-domaine"></div>
@@ -60,7 +60,7 @@
         <p class="profile-desc" id="r-desc"></p>
       </div>
       <div class="result-body">
-        <div class="section-title">🧭 La boussole politique</div>
+        <div class="ps-section-title">🧭 La boussole politique</div>
         <div class="compass-wrap">
           <div class="compass-labels">
             <div></div><div class="top">Autoritaire</div><div></div>
@@ -71,17 +71,19 @@
             <svg class="compass-svg" id="compass-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"></svg>
           </div>
         </div>
-
-        <div class="section-title">📊 Tes axes idéologiques</div>
+        <div class="ps-section-title">📊 Tes axes idéologiques</div>
         <div class="axes-grid" id="axes-grid"></div>
-
-        <div class="section-title">🏛️ Proximité partisane</div>
+        <div class="ps-section-title">🏛️ Proximité partisane</div>
         <div class="partis-grid" id="partis-grid"></div>
-
-        <div class="section-title">🧠 Penseurs & figures proches</div>
+        <div class="ps-section-title">🧠 Penseurs & figures proches</div>
         <div class="penseurs-grid" id="penseurs-grid"></div>
-
         <div class="result-actions">
+          <button class="btn btn-primary" onclick="downloadResult()">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0">
+              <path d="M8 2v8M5 7l3 3 3-3M2 12h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Télécharger l'image
+          </button>
           <button class="btn btn-ghost" onclick="restart()">🔄 Recommencer</button>
           <a href="index.html" class="btn btn-ghost">← Retour à l'accueil</a>
         </div>
