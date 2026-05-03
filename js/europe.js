@@ -157,11 +157,12 @@ function vote(code, i) {
 function updateLogoOverlays() {
   logoLayer.innerHTML = "";
 
-  const svgEl = document.getElementById("europe-svg");
-  const ctm = svgEl.getScreenCTM();
-  if (!ctm) return;
+  const svg = document.getElementById("europe-svg");
+  const rect = svg.getBoundingClientRect();
+  const vb = svg.viewBox.baseVal;
 
-  const pt = svgEl.createSVGPoint();
+  const scaleX = rect.width / vb.width;
+  const scaleY = rect.height / vb.height;
 
   for (const [code, p] of Object.entries(votes)) {
     const path = document.getElementById("c-" + code);
@@ -169,16 +170,14 @@ function updateLogoOverlays() {
 
     const bbox = path.getBBox();
 
-    pt.x = bbox.x + bbox.width / 2;
-    pt.y = bbox.y + bbox.height / 2;
-
-    const screen = pt.matrixTransform(ctm);
+    const x = (bbox.x + bbox.width / 2) * scaleX;
+    const y = (bbox.y + bbox.height / 2) * scaleY;
 
     const div = document.createElement("div");
     div.className = "eu-logo";
 
-    div.style.left = screen.x + "px";
-    div.style.top = screen.y + "px";
+    div.style.left = rect.left + x + "px";
+    div.style.top = rect.top + y + "px";
 
     div.innerHTML = `
       <div class="eu-logo-fallback">🏛</div>
