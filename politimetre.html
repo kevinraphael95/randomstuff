@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Politimètre — Votez comme les députés · PolitiLab</title>
+  <meta name="description" content="Votez sur de vrais scrutins de l'Assemblée Nationale et découvrez quel groupe parlementaire vous ressemble.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/politimetre.css">
+</head>
+<body>
+
+  <!-- Nav injectée par nav.js -->
+
+  <div class="page-wrap">
+
+    <!-- ═══ INTRO ═══ -->
+    <section class="pm-screen active" id="s-intro">
+      <div class="pm-intro-layout">
+        <div class="pm-intro-text">
+          <h1 class="pm-intro-heading">
+            Quel parti<br>
+            <em>vous correspond<br>le plus ?</em>
+          </h1>
+          <p class="pm-intro-body">
+            Votez Pour, Contre ou Abstention sur de vrais scrutins de l'Assemblée Nationale.
+            Votre profil est calculé selon la distribution réelle des votes de chaque groupe parlementaire.
+          </p>
+          <div class="pm-meta-row">
+            <div class="pm-meta"><strong>10</strong><span>scrutins</span></div>
+            <div class="pm-meta-sep"></div>
+            <div class="pm-meta"><strong>7</strong><span>groupes</span></div>
+            <div class="pm-meta-sep"></div>
+            <div class="pm-meta"><strong>~3 min</strong><span>durée</span></div>
+          </div>
+          <button class="btn btn-primary" onclick="App.start()">
+            Commencer
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <p class="pm-source-note">Sources : <a href="https://assemblee-nationale.fr" target="_blank" rel="noopener">assemblee-nationale.fr</a> · Données officielles des scrutins publics · 17<sup>e</sup> législature</p>
+        </div>
+        <div class="pm-intro-visual" aria-hidden="true">
+          <svg class="pm-hemi" viewBox="0 0 320 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 10 165 A 150 150 0 0 1 310 165" stroke="rgba(255,255,255,.12)" stroke-width="2" fill="none"/>
+            <path d="M 50 165 A 110 110 0 0 1 270 165" stroke="var(--blue)" stroke-width="1.5" fill="none" opacity=".3">
+              <animate attributeName="opacity" values=".15;.45;.15" dur="3s" repeatCount="indefinite"/>
+            </path>
+            <path d="M 95 165 A 65 65 0 0 1 225 165" stroke="var(--accent)" stroke-width="2" fill="none" opacity=".7">
+              <animate attributeName="opacity" values=".4;.9;.4" dur="3s" begin="0.8s" repeatCount="indefinite"/>
+            </path>
+            <g>
+              <circle cx="160" cy="30"  r="4" fill="rgba(255,255,255,.5)"/>
+              <circle cx="135" cy="38"  r="4" fill="rgba(255,255,255,.4)"/>
+              <circle cx="185" cy="38"  r="4" fill="rgba(255,255,255,.4)"/>
+              <circle cx="112" cy="52"  r="4" fill="rgba(255,255,255,.3)"/>
+              <circle cx="160" cy="48"  r="4" fill="rgba(255,255,255,.3)"/>
+              <circle cx="208" cy="52"  r="4" fill="rgba(255,255,255,.3)"/>
+              <circle cx="92"  cy="72"  r="4" fill="var(--blue)"   opacity=".7"/>
+              <circle cx="120" cy="65"  r="4" fill="var(--blue)"   opacity=".7"/>
+              <circle cx="148" cy="62"  r="4" fill="var(--blue)"   opacity=".7"/>
+              <circle cx="172" cy="62"  r="4" fill="var(--accent2)" opacity=".7"/>
+              <circle cx="200" cy="65"  r="4" fill="var(--accent2)" opacity=".7"/>
+              <circle cx="228" cy="72"  r="4" fill="var(--accent2)" opacity=".7"/>
+              <circle cx="72"  cy="97"  r="4" fill="var(--gold)"   opacity=".8"/>
+              <circle cx="97"  cy="88"  r="4" fill="var(--gold)"   opacity=".8"/>
+              <circle cx="124" cy="83"  r="4" fill="var(--accent)" opacity=".7"/>
+              <circle cx="152" cy="80"  r="4" fill="var(--accent)" opacity=".7"/>
+              <circle cx="168" cy="80"  r="4" fill="var(--teal)"   opacity=".7"/>
+              <circle cx="196" cy="83"  r="4" fill="var(--teal)"   opacity=".7"/>
+              <circle cx="223" cy="88"  r="4" fill="rgba(255,255,255,.4)"/>
+              <circle cx="248" cy="97"  r="4" fill="rgba(255,255,255,.4)"/>
+              <circle cx="55"  cy="124" r="4" fill="var(--gold)"   opacity=".5"/>
+              <circle cx="78"  cy="113" r="4" fill="rgba(255,255,255,.2)"/>
+              <circle cx="103" cy="106" r="4" fill="rgba(255,255,255,.2)"/>
+              <circle cx="130" cy="102" r="4" fill="rgba(255,255,255,.2)"/>
+              <circle cx="157" cy="100" r="4" fill="rgba(255,255,255,.2)"/>
+              <circle cx="163" cy="100" r="4" fill="rgba(255,255,255,.2)"/>
+              <circle cx="190" cy="102" r="4" fill="rgba(255,255,255,.2)"/>
+              <circle cx="217" cy="106" r="4" fill="rgba(255,255,255,.2)"/>
+              <circle cx="242" cy="113" r="4" fill="rgba(255,255,255,.2)"/>
+              <circle cx="265" cy="124" r="4" fill="var(--gold)"   opacity=".5"/>
+            </g>
+          </svg>
+          <div class="pm-hemi-label">577 <small>sièges</small></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ VOTE ═══ -->
+    <section class="pm-screen" id="s-vote">
+      <div class="pm-vote-layout">
+        <aside class="pm-sidebar">
+          <div class="pm-prog-block">
+            <div class="pm-prog-num" id="prog-num">1<span>/10</span></div>
+            <svg class="pm-prog-ring" viewBox="0 0 44 44">
+              <circle cx="22" cy="22" r="18" fill="none" stroke="var(--surface3)" stroke-width="3"/>
+              <circle cx="22" cy="22" r="18" fill="none" stroke="var(--accent)" stroke-width="3"
+                stroke-linecap="round" stroke-dasharray="113" stroke-dashoffset="113"
+                id="ring-circle" transform="rotate(-90 22 22)"/>
+            </svg>
+          </div>
+          <div class="pm-tally" id="tally"></div>
+        </aside>
+
+        <div class="pm-main">
+          <div class="pm-card">
+            <div class="pm-card-top">
+              <span class="pm-card-num mono" id="card-num">Scrutin</span>
+              <span class="pm-card-date mono" id="card-date"></span>
+            </div>
+            <h2 class="pm-card-title" id="card-title">Chargement…</h2>
+            <div class="pm-desc-box">
+              <p id="desc-text">…</p>
+            </div>
+            <div class="pm-vote-btns" id="vote-btns">
+              <button class="pm-vbtn pour"       onclick="App.vote('pour')">
+                <span class="pm-vbtn-icon">👍</span><span>Pour</span>
+              </button>
+              <button class="pm-vbtn abstention" onclick="App.vote('abstention')">
+                <span class="pm-vbtn-icon">🤷</span><span>Abstention</span>
+              </button>
+              <button class="pm-vbtn contre"     onclick="App.vote('contre')">
+                <span class="pm-vbtn-icon">👎</span><span>Contre</span>
+              </button>
+            </div>
+            <div class="pm-reveal hidden" id="reveal">
+              <div class="pm-reveal-label">Position des groupes parlementaires</div>
+              <div class="pm-groupes-grid" id="groupes-grid"></div>
+              <div class="pm-reveal-footer">
+                <a class="pm-link-source" id="link-source" href="#" target="_blank" rel="noopener">
+                  Voir le scrutin officiel ↗
+                </a>
+                <button class="btn btn-primary btn-sm" onclick="App.next()">
+                  Suivant →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ RÉSULTATS ═══ -->
+    <section class="pm-screen" id="s-results">
+      <div class="pm-results-head">
+        <div class="section-label">Votre profil politique</div>
+        <h2 class="pm-results-title">Résultats</h2>
+        <p class="pm-results-sub" id="results-sub"></p>
+      </div>
+      <div class="pm-winner" id="winner"></div>
+      <div class="pm-bars-wrap">
+        <div class="pm-bars" id="bars"></div>
+      </div>
+      <div class="pm-detail-section">
+        <div class="pm-detail-title">Détail vote par vote</div>
+        <div id="vote-detail"></div>
+      </div>
+      <div class="pm-results-footer">
+        <div class="pm-results-footer-btns">
+          <button class="btn btn-ghost" onclick="App.restart()">↺ Recommencer</button>
+          <a href="index.html" class="btn btn-ghost">← Accueil</a>
+        </div>
+        <p class="pm-disclaimer">
+          Score calculé par concordance pondérée. Données : assemblee-nationale.fr — scrutins publics officiels.
+        </p>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="js/nav.js"></script>
+  <script src="js/politimetre.js"></script>
+</body>
+</html>
