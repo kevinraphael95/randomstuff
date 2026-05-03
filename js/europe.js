@@ -25,16 +25,29 @@ fetch('europe-map.svg')
 
     const svgEl = container.querySelector('svg');
     svgEl.id = 'europe-svg';
+
+    // FIX 1 : forcer le viewBox si absent (sinon le scaling est cassé)
+    if (!svgEl.getAttribute('viewBox')) {
+      const w = svgEl.getAttribute('width')  || '680';
+      const h = svgEl.getAttribute('height') || '520';
+      svgEl.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    }
+    // Laisser le CSS gérer la taille
+    svgEl.removeAttribute('width');
+    svgEl.removeAttribute('height');
     svgEl.style.width   = '100%';
     svgEl.style.height  = 'auto';
     svgEl.style.display = 'block';
 
     svgEl.querySelectorAll('path[id], g[id]').forEach(el => {
       const code = el.id.toUpperCase();
-      if (!PARTIES[code]) return;
+      // FIX 2 : le SVG utilise "gb" pas "uk"
+      const mappedCode = code === 'GB' ? 'UK' : code;
+      if (!PARTIES[mappedCode]) return;
+      el.dataset.country = mappedCode; // stocker le code mappé
       el.classList.add('eu-country');
-      el.addEventListener('click',      ()  => openModal(code));
-      el.addEventListener('mouseenter', e   => showTip(e, COUNTRY_NAMES[code]));
+      el.addEventListener('click',      ()  => openModal(mappedCode));
+      el.addEventListener('mouseenter', e   => showTip(e, COUNTRY_NAMES[mappedCode]));
       el.addEventListener('mousemove',  e   => moveTip(e));
       el.addEventListener('mouseleave', ()  => hideTip());
     });
@@ -102,7 +115,9 @@ function renderParties(code) {
 
 /* ── HELPER: trouve un path par code ── */
 function getEl(code) {
-  return document.querySelector(`#europe-svg-container svg [id="${code.toLowerCase()}"]`);
+  // FIX 2 : UK dans les données = gb dans le SVG
+  const svgId = code === 'UK' ? 'gb' : code.toLowerCase();
+  return document.querySelector(`#europe-svg-container svg [id="${svgId}"]`);
 }
 
 /* ── VOTE ── */
@@ -132,17 +147,23 @@ function updateLogoOverlays() {
   const vb = svgEl.viewBox?.baseVal;
   if (!vb || vb.width === 0) return;
 
-  const rect   = svgEl.getBoundingClientRect();
-  const scaleX = rect.width  / vb.width;
-  const scaleY = rect.height / vb.height;
+  // FIX 3 : positions relatives au container, pas à la fenêtre
+  const containerEl   = document.getElementById('europe-svg-container');
+  const containerRect = containerEl.getBoundingClientRect();
+  const svgRect       = svgEl.getBoundingClientRect();
+
+  const scaleX  = svgRect.width  / vb.width;
+  const scaleY  = svgRect.height / vb.height;
+  const offsetX = svgRect.left - containerRect.left;
+  const offsetY = svgRect.top  - containerRect.top;
 
   for (const [code, p] of Object.entries(votes)) {
     const path = getEl(code);
     if (!path) continue;
 
     const bbox = path.getBBox();
-    const x = (bbox.x + bbox.width  / 2) * scaleX;
-    const y = (bbox.y + bbox.height / 2) * scaleY;
+    const x = offsetX + (bbox.x + bbox.width  / 2) * scaleX;
+    const y = offsetY + (bbox.y + bbox.height / 2) * scaleY;
 
     const div = document.createElement('div');
     div.className  = 'eu-logo';
