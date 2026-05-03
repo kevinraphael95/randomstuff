@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PolitiScale — Où te situes-tu vraiment ? · PolitiLab</title>
+  <meta name="description" content="80 questions, 10 axes idéologiques. Découvrez votre positionnement politique précis.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/politiscale.css">
+</head>
+<body>
+
+  <!-- Nav injectée par nav.js -->
+
+  <div class="page-wrap">
+
+    <!-- ══ INTRO ══ -->
+    <div id="screen-intro" class="ps-screen active">
+      <div class="intro-center">
+        <div class="glow-ring"><div class="glow-ring-inner">🧭</div></div>
+        <h1 class="intro-h1">Où te situes-tu<br><em>vraiment&nbsp;?</em></h1>
+        <p class="intro-tagline">Un test politique approfondi — 80 questions, 10 axes idéologiques, aucune réponse correcte.</p>
+        <div class="axes-preview" id="axes-preview"></div>
+        <button class="btn btn-primary" onclick="startQuiz()">
+          Commencer le test
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <p class="intro-meta">≈ 8–12 min · 80 questions · résultats détaillés</p>
+      </div>
+    </div>
+
+    <!-- ══ QUIZ ══ -->
+    <div id="screen-quiz" class="ps-screen">
+      <div class="quiz-top">
+        <div class="quiz-logo">PolitiScale</div>
+        <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+        <div class="progress-label mono" id="progress-label">0 / 80</div>
+      </div>
+      <div class="quiz-body">
+        <div class="domaine-chip" id="q-domaine"></div>
+        <div class="question-text" id="q-text"></div>
+        <div class="question-detail" id="q-detail"></div>
+        <div class="answers" id="q-answers"></div>
+        <div class="nav-btns">
+          <button class="btn btn-ghost btn-sm" id="btn-prev" onclick="prevQ()">← Précédent</button>
+          <button class="btn btn-primary btn-sm" id="btn-next" onclick="nextQ()">Suivant →</button>
+          <button class="skip-link" onclick="skipQ()">Passer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ RÉSULTATS ══ -->
+    <div id="screen-result" class="ps-screen">
+      <div class="result-hero">
+        <div class="profile-label" id="r-label"></div>
+        <h2 id="r-title"></h2>
+        <p class="profile-desc" id="r-desc"></p>
+      </div>
+      <div class="result-body">
+        <div class="ps-section-title">🧭 La boussole politique</div>
+        <div class="compass-wrap">
+          <div class="compass-labels">
+            <div></div><div class="top">Autoritaire</div><div></div>
+            <div class="left">Collectiviste</div><div></div><div class="right">Libéral éco.</div>
+            <div></div><div class="bottom">Libertaire</div><div></div>
+          </div>
+          <div class="compass-grid">
+            <svg class="compass-svg" id="compass-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"></svg>
+          </div>
+        </div>
+        <div class="ps-section-title">📊 Tes axes idéologiques</div>
+        <div class="axes-grid" id="axes-grid"></div>
+        <div class="ps-section-title">🏛️ Proximité partisane</div>
+        <div class="partis-grid" id="partis-grid"></div>
+        <div class="ps-section-title">🧠 Penseurs & figures proches</div>
+        <div class="penseurs-grid" id="penseurs-grid"></div>
+        <div class="result-actions">
+          <button class="btn btn-primary" onclick="downloadResult()">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0">
+              <path d="M8 2v8M5 7l3 3 3-3M2 12h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Télécharger l'image
+          </button>
+          <button class="btn btn-ghost" onclick="restart()">🔄 Recommencer</button>
+          <a href="index.html" class="btn btn-ghost">← Retour à l'accueil</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="js/nav.js"></script>
+  <script src="js/politiscale.js"></script>
+</body>
+</html>
