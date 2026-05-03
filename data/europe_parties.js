@@ -1,4 +1,4 @@
-{
+const PARTIES = {
 "FR":[
   {"name":"La France Insoumise","orient":"Extrême gauche","seats":71,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/La_France_insoumise_%28logo%2C_2022%29.svg/120px-La_France_insoumise_%28logo%2C_2022%29.svg.png"},
   {"name":"Parti Communiste","orient":"Extrême gauche","seats":22,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/PCF_logo_2018.svg/120px-PCF_logo_2018.svg.png"},
