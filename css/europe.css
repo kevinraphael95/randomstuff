@@ -62,6 +62,7 @@
 
 /* ── The exportable canvas ── */
 .eu-canvas {
+  background: linear-gradient(180deg, #1b2a4a 0%, #101a2f 100%);
   position: relative;
   width: 100%;
   background: #1a2744;
