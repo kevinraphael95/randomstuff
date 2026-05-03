@@ -161,11 +161,13 @@ function updateLogoOverlays() {
   const pt = svgEl.createSVGPoint();
 
   for (const [code, p] of Object.entries(votes)) {
-    const pos = LABEL_POS[code];
-    if (!pos) continue;
+    const path = document.getElementById("c-" + code);
+    if (!path) continue;
 
-    pt.x = pos[0];
-    pt.y = pos[1];
+    const bbox = path.getBBox();
+
+    pt.x = bbox.x + bbox.width / 2;
+    pt.y = bbox.y + bbox.height / 2;
 
     const screen = pt.matrixTransform(svgEl.getScreenCTM());
 
@@ -180,7 +182,7 @@ function updateLogoOverlays() {
       <div class="eu-logo-name">${p.name}</div>
     `;
 
-    document.getElementById("logo-layer").appendChild(div);
+    logoLayer.appendChild(div);
   }
 }
 
