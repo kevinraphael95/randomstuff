@@ -221,4 +221,23 @@ const PARTIES = {
   {"name":"LSAP","orient":"Centre gauche","seats":11,"logo":""}
 ],
 
-}
+};
+
+const COUNTRY_NAMES = 
+{"FR":"🇫🇷 France","DE":"🇩🇪 Allemagne","ES":"🇪🇸 Espagne","PT":"🇵🇹 Portugal","IT":"🇮🇹 Italie","UK":"🇬🇧 Royaume-Uni","BE":"🇧🇪 Belgique",
+"NL":"🇳🇱 Pays-Bas","SE":"🇸🇪 Suède","NO":"🇳🇴 Norvège","FI":"🇫🇮 Finlande","DK":"🇩🇰 Danemark","PL":"🇵🇱 Pologne","CZ":"🇨🇿 Tchéquie",
+"AT":"🇦🇹 Autriche","HU":"🇭🇺 Hongrie","RO":"🇷🇴 Roumanie","HR":"🇭🇷 Croatie","RS":"🇷🇸 Serbie","GR":"🇬🇷 Grèce","EE":"🇪🇪 Estonie",
+"LV":"🇱🇻 Lettonie","LT":"🇱🇹 Lituanie","BG":"🇧🇬 Bulgarie","AL":"🇦🇱 Albanie","CH":"🇨🇭 Suisse","IE":"🇮🇪 Irlande","IS":"🇮🇸 Islande",
+"SK":"🇸🇰 Slovaquie","SI":"🇸🇮 Slovénie","BA":"🇧🇦 Bosnie","MK":"🇲🇰 Macédoine","ME":"🇲🇪 Monténégro","UA":"🇺🇦 Ukraine","MD":"🇲🇩 Moldavie",
+"BY":"🇧🇾 Biélorussie","LU":"🇱🇺 Luxembourg"};
+
+const ORIENT_COLOR = 
+{"Extrême gauche":"#c00",
+  "Gauche":"#e05",
+  "Centre gauche":"#e84",
+  "Centre":"#aa0",
+  "Centre droit":"#46a",
+  "Droite":"#338",
+  "Droite radicale":"#226",
+  "Extrême droite":"#800",
+  "Régionaliste":"#2a2","Autre":"#888"}
