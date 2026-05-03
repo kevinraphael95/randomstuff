@@ -1,301 +1,228 @@
 /* ═══════════════════════════════════════
    PolitiLab — Mon Vote Européen
-   JS adapté nouveau layout
 ═══════════════════════════════════════ */
 
+/* ── STATE ── */
+let votes = {};
+let currentCode = null;
 
-/* ── DATA (à remplir toi-même) ── */
-const PARTIES = {"FR":[{"name":"La France Insoumise","orient":"Extrême gauche","seats":71,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/La_France_insoumise_%28logo%2C_2022%29.svg/120px-La_France_insoumise_%28logo%2C_2022%29.svg.png"},{"name":"Parti Communiste","orient":"Extrême gauche","seats":22,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/PCF_logo_2018.svg/120px-PCF_logo_2018.svg.png"},{"name":"Les Écologistes","orient":"Gauche","seats":38,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Les_%C3%89cologistes_logo_2022.svg/120px-Les_%C3%89cologistes_logo_2022.svg.png"},{"name":"Parti Socialiste","orient":"Centre gauche","seats":69,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Parti_socialiste_%28France%29_logo_2023.svg/120px-Parti_socialiste_%28France%29_logo_2023.svg.png"},{"name":"Renaissance","orient":"Centre","seats":92,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Renaissance_logo_%282022%29.svg/120px-Renaissance_logo_%282022%29.svg.png"},{"name":"MoDem","orient":"Centre","seats":36,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Mouvement_D%C3%A9mocrate_%28logo%2C_2017%29.svg/120px-Mouvement_D%C3%A9mocrate_%28logo%2C_2017%29.svg.png"},{"name":"Horizons","orient":"Centre droit","seats":29,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Horizons_logo_%282021%29.svg/120px-Horizons_logo_%282021%29.svg.png"},{"name":"Les Républicains","orient":"Droite","seats":39,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Logo_Les_R%C3%A9publicains.svg/120px-Logo_Les_R%C3%A9publicains.svg.png"},{"name":"Rassemblement National","orient":"Extrême droite","seats":126,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Rassemblement_national_logo_%282022%29.svg/120px-Rassemblement_national_%28logo%2C_2022%29.svg.png"},{"name":"Reconquête","orient":"Extrême droite","seats":16,"logo":"https://upload.wikimedia.org/wikipedia/fr/thumb/5/53/Logo_Reconqu%C3%AAte%21.svg/120px-Logo_Reconqu%C3%AAte%21.svg.png"}],"DE":[{"name":"Die Linke","orient":"Extrême gauche","seats":64,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Die_Linke_logo.svg/120px-Die_Linke_logo.svg.png"},{"name":"Bündnis 90/Die Grünen","orient":"Centre gauche","seats":85,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/B%C3%BCndnis_90_-_Die_Gr%C3%BCnen_Logo.svg/120px-B%C3%BCndnis_90_-_Die_Gr%C3%BCnen_Logo.svg.png"},{"name":"SPD","orient":"Centre gauche","seats":120,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/SPD_logo.svg/120px-SPD_logo.svg.png"},{"name":"CDU/CSU","orient":"Centre droit","seats":208,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/CDU_logo_2022.svg/120px-CDU_logo_2022.svg.png"},{"name":"AfD","orient":"Extrême droite","seats":152,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/AfD_logo%2C_2017.svg/120px-AfD_logo%2C_2017.svg.png"}],"ES":[{"name":"Sumar","orient":"Extrême gauche","seats":31,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Sumar_logo_%282023%29.svg/120px-Sumar_logo_%282023%29.svg.png"},{"name":"PSOE","orient":"Centre gauche","seats":120,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/PSOE_logo.svg/120px-PSOE_logo.svg.png"},{"name":"Partido Popular","orient":"Centre droit","seats":137,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Partido_Popular_logo_2022.svg/120px-Partido_Popular_logo_2022.svg.png"},{"name":"Vox","orient":"Extrême droite","seats":33,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/VOX_logo_2018.svg/120px-VOX_logo_2018.svg.png"}],"PT":[{"name":"Bloco de Esquerda","orient":"Extrême gauche","seats":5,"logo":""},{"name":"PS","orient":"Centre gauche","seats":78,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Partido_Socialista_%28Portugal%29_logo.svg/120px-Partido_Socialista_%28Portugal%29_logo.svg.png"},{"name":"AD (PSD+CDS)","orient":"Centre droit","seats":80,"logo":""},{"name":"Chega","orient":"Extrême droite","seats":50,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Chega_logo.svg/120px-Chega_logo.svg.png"}],"IT":[{"name":"Partito Democratico","orient":"Centre gauche","seats":69,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Partito_Democratico_-_Logo_2023.svg/120px-Partito_Democratico_-_Logo_2023.svg.png"},{"name":"Movimento 5 Stelle","orient":"Centre","seats":52,"logo":"https://upload.wikimedia.org/wikipedia/it/thumb/e/e5/Movimento_5_Stelle_Logo_vettoriale.svg/120px-Movimento_5_Stelle_Logo_vettoriale.svg.png"},{"name":"Forza Italia","orient":"Centre droit","seats":45,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Forza_Italia_logo_%282013%29.svg/120px-Forza_Italia_logo_%282013%29.svg.png"},{"name":"Lega","orient":"Droite radicale","seats":66,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Logo_Lega_Salvini_Premier.svg/120px-Logo_Lega_Salvini_Premier.svg.png"},{"name":"Fratelli d'Italia","orient":"Droite radicale","seats":119,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Fratelli_d%27Italia_-_Logo_2022.svg/120px-Fratelli_d%27Italia_-_Logo_2022.svg.png"}],"UK":[{"name":"Labour","orient":"Centre gauche","seats":403,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Labour_Party_%28UK%29_logo.svg/120px-Labour_Party_%28UK%29_logo.svg.png"},{"name":"Conservative","orient":"Centre droit","seats":121,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Conservative_Party_%28UK%29_logo.svg/120px-Conservative_Party_%28UK%29_logo.svg.png"},{"name":"Liberal Democrats","orient":"Centre","seats":72,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Liberal_Democrats_%28UK%29_Logo.svg/120px-Liberal_Democrats_%28UK%29_Logo.svg.png"},{"name":"SNP","orient":"Régionaliste","seats":9,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/SNP_logo.svg/120px-SNP_logo.svg.png"},{"name":"Reform UK","orient":"Droite radicale","seats":5,"logo":"https://upload.wikimedia.org/wikipedia/en/thumb/6/6f/Reform_UK_logo.svg/120px-Reform_UK_logo.svg.png"}],"BE":[{"name":"PTB/PVDA","orient":"Extrême gauche","seats":15,"logo":""},{"name":"PS/Vooruit","orient":"Centre gauche","seats":29,"logo":""},{"name":"MR","orient":"Centre droit","seats":20,"logo":""},{"name":"N-VA","orient":"Centre droit","seats":24,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/N-VA_logo.svg/120px-N-VA_logo.svg.png"},{"name":"Vlaams Belang","orient":"Extrême droite","seats":20,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Vlaams_Belang_Logo.svg/120px-Vlaams_Belang_Logo.svg.png"}],"NL":[{"name":"GroenLinks/PvdA","orient":"Centre gauche","seats":25,"logo":""},{"name":"VVD","orient":"Centre droit","seats":24,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/VVD_Logo_2010.svg/120px-VVD_Logo_2010.svg.png"},{"name":"PVV","orient":"Extrême droite","seats":37,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/PVV_logo_%282023%29.svg/120px-PVV_logo_%282023%29.svg.png"}],"SE":[{"name":"Socialdemokraterna","orient":"Centre gauche","seats":107,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Sveriges_socialdemokratiska_arbetareparti_%28logotyp%2C_2016%29.svg/120px-Sveriges_socialdemokratiska_arbetareparti_%28logotyp%2C_2016%29.svg.png"},{"name":"Moderaterna","orient":"Centre droit","seats":68,"logo":""},{"name":"Sverigedemokraterna","orient":"Droite radicale","seats":73,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Sverigedemokraterna_logo.svg/120px-Sverigedemokraterna_logo.svg.png"}],"NO":[{"name":"Arbeiderpartiet","orient":"Centre gauche","seats":48,"logo":""},{"name":"Høyre","orient":"Centre droit","seats":36,"logo":""},{"name":"Fremskrittspartiet","orient":"Droite radicale","seats":21,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Fremskrittspartiet_logo.svg/120px-Fremskrittspartiet_logo.svg.png"}],"FI":[{"name":"SDP","orient":"Centre gauche","seats":43,"logo":""},{"name":"Kansallinen Kokoomus","orient":"Centre droit","seats":48,"logo":""},{"name":"Perussuomalaiset","orient":"Droite radicale","seats":46,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Perussuomalaiset.svg/120px-Perussuomalaiset.svg.png"}],"DK":[{"name":"Socialdemokraterne","orient":"Centre gauche","seats":50,"logo":""},{"name":"Venstre","orient":"Centre droit","seats":23,"logo":""},{"name":"Danmarks Demokraterne","orient":"Droite radicale","seats":14,"logo":""}],"PL":[{"name":"KO (PO)","orient":"Centre droit","seats":157,"logo":""},{"name":"PiS","orient":"Droite radicale","seats":194,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/PiS_logo.svg/120px-PiS_logo.svg.png"},{"name":"Konfederacja","orient":"Extrême droite","seats":18,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Konfederacja_logo_%282019%29.svg/120px-Konfederacja_logo_%282019%29.svg.png"}],"CZ":[{"name":"ANO","orient":"Centre","seats":72,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/ANO_2011_logo.svg/120px-ANO_2011_logo.svg.png"},{"name":"SPOLU","orient":"Centre droit","seats":71,"logo":""},{"name":"SPD","orient":"Droite radicale","seats":20,"logo":""},{"name":"Motoristé sobě","orient":"Droite","seats":9,"logo":""}],"AT":[{"name":"SPÖ","orient":"Centre gauche","seats":41,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Sozialdemokratische_Partei_%C3%96sterreichs_logo.svg/120px-Sozialdemokratische_Partei_%C3%96sterreichs_logo.svg.png"},{"name":"ÖVP","orient":"Centre droit","seats":52,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/%C3%96VP_-_Neue_Volkspartei_logo.svg/120px-%C3%96VP_-_Neue_Volkspartei_logo.svg.png"},{"name":"FPÖ","orient":"Extrême droite","seats":57,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/FP%C3%96_logo.svg/120px-FP%C3%96_logo.svg.png"}],"HU":[{"name":"TISZA","orient":"Centre droit","seats":34,"logo":""},{"name":"Fidesz-KDNP","orient":"Droite radicale","seats":135,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Fidesz_logo_%282020%29.svg/120px-Fidesz_logo_%282020%29.svg.png"}],"RO":[{"name":"PSD","orient":"Centre gauche","seats":122,"logo":""},{"name":"PNL","orient":"Centre droit","seats":71,"logo":""},{"name":"AUR","orient":"Extrême droite","seats":40,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/AUR_logo.svg/120px-AUR_logo.svg.png"}],"GR":[{"name":"SYRIZA","orient":"Gauche","seats":48,"logo":""},{"name":"PASOK","orient":"Centre gauche","seats":42,"logo":""},{"name":"Νέα Δημοκρατία","orient":"Centre droit","seats":158,"logo":""},{"name":"Ελληνική Λύση","orient":"Droite radicale","seats":12,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Elliniki_Lysi_logo.svg/120px-Elliniki_Lysi_logo.svg.png"}],"EE":[{"name":"Reformierakond","orient":"Centre droit","seats":37,"logo":""},{"name":"EKRE","orient":"Droite radicale","seats":17,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Eesti_Konservatiivne_Rahvaerakond_logo.svg/120px-Eesti_Konservatiivne_Rahvaerakond_logo.svg.png"}],"LV":[{"name":"JV","orient":"Centre droit","seats":26,"logo":""},{"name":"NA","orient":"Droite radicale","seats":13,"logo":""}],"LT":[{"name":"LSDP","orient":"Centre gauche","seats":52,"logo":""},{"name":"TS-LKD","orient":"Centre droit","seats":28,"logo":""},{"name":"Nemuno aušra","orient":"Droite radicale","seats":20,"logo":""}],"SK":[{"name":"Smer-SD","orient":"Centre gauche","seats":42,"logo":""},{"name":"Republika","orient":"Extrême droite","seats":10,"logo":""}],"HR":[{"name":"HDZ","orient":"Centre droit","seats":61,"logo":""},{"name":"Domovinski pokret","orient":"Droite radicale","seats":14,"logo":""}],"SI":[{"name":"Gibanje Svoboda","orient":"Centre","seats":41,"logo":""},{"name":"SDS","orient":"Centre droit","seats":27,"logo":""}],"BA":[{"name":"SDA","orient":"Centre droit","seats":11,"logo":""},{"name":"SNSD","orient":"Droite radicale","seats":6,"logo":""}],"RS":[{"name":"SNS","orient":"Centre droit","seats":129,"logo":""},{"name":"Zavetnici","orient":"Droite radicale","seats":11,"logo":""}],"BG":[{"name":"GERB","orient":"Centre droit","seats":69,"logo":""},{"name":"Vazrazhdane","orient":"Extrême droite","seats":38,"logo":""}],"CH":[{"name":"SP","orient":"Centre gauche","seats":41,"logo":""},{"name":"FDP","orient":"Centre droit","seats":28,"logo":""},{"name":"SVP","orient":"Droite radicale","seats":62,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/SVP_logo.svg/120px-SVP_logo.svg.png"}],"IE":[{"name":"Sinn Féin","orient":"Centre gauche","seats":39,"logo":""},{"name":"Fianna Fáil","orient":"Centre","seats":48,"logo":""},{"name":"Fine Gael","orient":"Centre droit","seats":38,"logo":""}],"IS":[{"name":"Samfylkingin","orient":"Centre gauche","seats":15,"logo":""},{"name":"Sjálfstæðisflokkur","orient":"Centre droit","seats":16,"logo":""}],"MK":[{"name":"VMRO-DPMNE","orient":"Droite radicale","seats":58,"logo":""}],"ME":[{"name":"Europe Now","orient":"Centre droit","seats":25,"logo":""},{"name":"DF","orient":"Droite radicale","seats":13,"logo":""}],"AL":[{"name":"PS","orient":"Centre gauche","seats":82,"logo":""},{"name":"PD","orient":"Centre droit","seats":55,"logo":""}],"UA":[{"name":"Sluha Narodu","orient":"Centre","seats":232,"logo":""}],"MD":[{"name":"PAS","orient":"Centre droit","seats":63,"logo":""},{"name":"PSRM","orient":"Centre gauche","seats":32,"logo":""}],"BY":[{"name":"Belaya Rus","orient":"Autre","seats":79,"logo":""}],"LU":[{"name":"CSV","orient":"Centre droit","seats":21,"logo":""},{"name":"DP","orient":"Centre","seats":14,"logo":""},{"name":"LSAP","orient":"Centre gauche","seats":11,"logo":""}]};
-const COUNTRY_NAMES = {"FR":"🇫🇷 France","DE":"🇩🇪 Allemagne","ES":"🇪🇸 Espagne","PT":"🇵🇹 Portugal","IT":"🇮🇹 Italie","UK":"🇬🇧 Royaume-Uni","BE":"🇧🇪 Belgique","NL":"🇳🇱 Pays-Bas","SE":"🇸🇪 Suède","NO":"🇳🇴 Norvège","FI":"🇫🇮 Finlande","DK":"🇩🇰 Danemark","PL":"🇵🇱 Pologne","CZ":"🇨🇿 Tchéquie","AT":"🇦🇹 Autriche","HU":"🇭🇺 Hongrie","RO":"🇷🇴 Roumanie","HR":"🇭🇷 Croatie","RS":"🇷🇸 Serbie","GR":"🇬🇷 Grèce","EE":"🇪🇪 Estonie","LV":"🇱🇻 Lettonie","LT":"🇱🇹 Lituanie","BG":"🇧🇬 Bulgarie","AL":"🇦🇱 Albanie","CH":"🇨🇭 Suisse","IE":"🇮🇪 Irlande","IS":"🇮🇸 Islande","SK":"🇸🇰 Slovaquie","SI":"🇸🇮 Slovénie","BA":"🇧🇦 Bosnie","MK":"🇲🇰 Macédoine","ME":"🇲🇪 Monténégro","UA":"🇺🇦 Ukraine","MD":"🇲🇩 Moldavie","BY":"🇧🇾 Biélorussie","LU":"🇱🇺 Luxembourg"};
-const ORIENT_COLOR = {"Extrême gauche":"#c00","Gauche":"#e05","Centre gauche":"#e84","Centre":"#aa0","Centre droit":"#46a","Droite":"#338","Droite radicale":"#226","Extrême droite":"#800","Régionaliste":"#2a2","Autre":"#888"};
+/* ── ELEMENTS ── */
+const tip          = document.getElementById("eu-tip");
+const modalBg      = document.getElementById("modal-bg");
+const modalCountry = document.getElementById("modal-country");
+const modalGrid    = document.getElementById("modal-grid");
+const logoLayer    = document.getElementById("logo-layer");
+const strip        = document.getElementById("eu-strip-list");
+const count        = document.getElementById("eu-count");
+const empty        = document.getElementById("empty-hint");
 
-/* ── SVG (CHARGE LE SVG) ── */
+/* ── CHARGE LE SVG ── */
 fetch('europe-map.svg')
   .then(r => r.text())
   .then(svgText => {
-    document.getElementById('europe-svg-container').innerHTML = svgText;
-    const svgEl = document.querySelector('#europe-svg-container svg');
-    svgEl.id = 'europe-svg';
+    const container = document.getElementById('europe-svg-container');
+    container.innerHTML = svgText;
 
-    // Les IDs sont en minuscules dans le SVG Wikimedia : "fr", "de"...
+    const svgEl = container.querySelector('svg');
+    svgEl.id = 'europe-svg';
+    svgEl.style.width   = '100%';
+    svgEl.style.height  = 'auto';
+    svgEl.style.display = 'block';
+
     svgEl.querySelectorAll('path[id], g[id]').forEach(el => {
       const code = el.id.toUpperCase();
       if (!PARTIES[code]) return;
       el.classList.add('eu-country');
-      el.addEventListener('click', () => openModal(code));
-      el.addEventListener('mouseenter', e => showTip(e, COUNTRY_NAMES[code]));
-      el.addEventListener('mousemove', moveTip);
-      el.addEventListener('mouseleave', hideTip);
+      el.addEventListener('click',      ()  => openModal(code));
+      el.addEventListener('mouseenter', e   => showTip(e, COUNTRY_NAMES[code]));
+      el.addEventListener('mousemove',  e   => moveTip(e));
+      el.addEventListener('mouseleave', ()  => hideTip());
     });
 
     renderAll();
   });
 
-/* ── STATE ── */
-
-let votes = {};
-let currentCode = null;
-
-
-/* ── ELEMENTS ── */
-
-const svg = document.getElementById("europe-svg");
-const tip = document.getElementById("eu-tip");
-
-const modalBg = document.getElementById("modal-bg");
-const modalCountry = document.getElementById("modal-country");
-const modalGrid = document.getElementById("modal-grid");
-
-const logoLayer = document.getElementById("logo-layer");
-const strip = document.getElementById("eu-strip-list");
-const count = document.getElementById("eu-count");
-const empty = document.getElementById("empty-hint");
-
-const section = document.getElementById("map-outer");
-
-
-/* ── BUILD MAP ── */
-
-for (const [code, d] of Object.entries(SVG_PATHS)) {
-  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-
-  path.setAttribute("d", d);
-  path.setAttribute("class", "eu-country");
-  path.id = "c-" + code;
-
-  const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
-  title.textContent = COUNTRY_NAMES[code] || code;
-
-  path.appendChild(title);
-
-  path.onclick = () => openModal(code);
-
-  path.onmouseenter = e => showTip(e, COUNTRY_NAMES[code] || code);
-  path.onmousemove = moveTip;
-  path.onmouseleave = hideTip;
-
-  svg.appendChild(path);
-}
-
-
 /* ── TOOLTIP ── */
-
 function showTip(e, t) {
-  tip.textContent = t;
+  tip.textContent   = t;
   tip.style.opacity = 1;
   moveTip(e);
 }
-
 function moveTip(e) {
-  tip.style.left = e.clientX + 14 + "px";
-  tip.style.top = e.clientY - 10 + "px";
+  tip.style.left = e.clientX + 14 + 'px';
+  tip.style.top  = e.clientY - 10 + 'px';
 }
-
 function hideTip() {
   tip.style.opacity = 0;
 }
 
-
 /* ── MODAL ── */
-
 function openModal(code) {
   if (!PARTIES[code]) return;
-
   currentCode = code;
-
   modalCountry.textContent = COUNTRY_NAMES[code] || code;
-
   renderParties(code);
-  modalBg.classList.add("active");
+  modalBg.classList.add('active');
 }
 
 function closeModal() {
-  modalBg.classList.remove("active");
+  modalBg.classList.remove('active');
 }
 
-modalBg.addEventListener("click", e => {
+modalBg.addEventListener('click', e => {
   if (e.target === modalBg) closeModal();
 });
 
-
 /* ── PARTIES ── */
-
 function renderParties(code) {
   const list = PARTIES[code] || [];
-
-  modalGrid.innerHTML = "";
+  modalGrid.innerHTML = '';
 
   list.forEach((p, i) => {
     const chosen = votes[code]?.name === p.name;
-    const col = ORIENT_COLOR[p.orient] || "#888";
+    const col    = ORIENT_COLOR[p.orient] || '#888';
 
-    const btn = document.createElement("button");
-    btn.className = "eu-party-btn";
-    if (chosen) btn.classList.add("chosen");
-
-    btn.addEventListener("click", () => vote(code, i));
+    const btn = document.createElement('button');
+    btn.className = 'eu-party-btn';
+    if (chosen) btn.classList.add('chosen');
+    btn.addEventListener('click', () => vote(code, i));
 
     btn.innerHTML = `
-      ${
-        p.logo
-          ? `<img src="${p.logo}" onerror="this.style.display='none'">`
-          : `<div class="eu-party-orient">🏛</div>`
+      ${p.logo
+        ? `<img src="${p.logo}" onerror="this.style.display='none'">`
+        : `<div class="eu-party-orient">🏛</div>`
       }
-
       <div class="eu-pname">${p.name}</div>
-      <div class="eu-party-orient" style="background:${col}">
-        ${p.orient}
-      </div>
+      <div class="eu-party-orient" style="background:${col}">${p.orient}</div>
     `;
 
     modalGrid.appendChild(btn);
   });
 }
 
+/* ── HELPER: trouve un path par code ── */
+function getEl(code) {
+  return document.querySelector(`#europe-svg-container svg [id="${code.toLowerCase()}"]`);
+}
 
 /* ── VOTE ── */
-
 function vote(code, i) {
-  const p = PARTIES?.[code]?.[i]; if (!p) return;
+  const p = PARTIES?.[code]?.[i];
+  if (!p) return;
 
   if (votes[code]?.name === p.name) {
     delete votes[code];
-    document.getElementById("c-" + code)?.classList.remove("has-vote");
+    getEl(code)?.classList.remove('has-vote');
   } else {
     votes[code] = p;
-    document.getElementById("c-" + code)?.classList.add("has-vote");
+    getEl(code)?.classList.add('has-vote');
   }
 
   renderAll();
   closeModal();
 }
 
-
-/* ── LOGOS OVER MAP ── */
-
+/* ── LOGOS SUR LA CARTE ── */
 function updateLogoOverlays() {
-  logoLayer.innerHTML = "";
+  logoLayer.innerHTML = '';
 
-  const svgEl = document.getElementById("europe-svg");
-  const vb = svgEl.viewBox.baseVal;
-  const rect = svgEl.getBoundingClientRect();
-  const scaleX = rect.width / vb.width;
+  const svgEl = document.querySelector('#europe-svg-container svg');
+  if (!svgEl) return;
+
+  const vb = svgEl.viewBox?.baseVal;
+  if (!vb || vb.width === 0) return;
+
+  const rect   = svgEl.getBoundingClientRect();
+  const scaleX = rect.width  / vb.width;
   const scaleY = rect.height / vb.height;
 
   for (const [code, p] of Object.entries(votes)) {
-    const path = document.getElementById("c-" + code);
+    const path = getEl(code);
     if (!path) continue;
 
     const bbox = path.getBBox();
-    const x = (bbox.x + bbox.width / 2) * scaleX;
+    const x = (bbox.x + bbox.width  / 2) * scaleX;
     const y = (bbox.y + bbox.height / 2) * scaleY;
 
-    const div = document.createElement("div");
-    div.className = "eu-logo";
-    div.style.left = x + "px";
-    div.style.top = y + "px";
+    const div = document.createElement('div');
+    div.className  = 'eu-logo';
+    div.style.left = x + 'px';
+    div.style.top  = y + 'px';
+    div.innerHTML  = p.logo
+      ? `<img src="${p.logo}" onerror="this.style.display='none'"><div class="eu-logo-name">${p.name}</div>`
+      : `<div class="eu-logo-name">${p.name}</div>`;
 
-    div.innerHTML = `<div class="eu-logo-name">${p.name}</div>`;
     logoLayer.appendChild(div);
   }
 }
 
-window.addEventListener("resize", updateLogoOverlays);
-
+window.addEventListener('resize', updateLogoOverlays);
 
 /* ── STRIP ── */
-
 function updateStrip() {
   const entries = Object.entries(votes);
+  empty.classList.toggle('hidden', entries.length > 0);
 
   strip.innerHTML = entries.length
-    ? ""
+    ? ''
     : `<span class="eu-strip-empty">Aucun pays sélectionné</span>`;
 
-  empty.classList.toggle("hidden", entries.length > 0);
-
   entries.forEach(([c, p]) => {
-    const el = document.createElement("div");
-    el.className = "eu-strip-item";
-
-    el.innerHTML = `${c} — ${p.name} <span class="eu-strip-x">✕</span>`;
+    const el = document.createElement('div');
+    el.className = 'eu-strip-item';
+    el.innerHTML = `${COUNTRY_NAMES[c] || c} — ${p.name} <span class="eu-strip-x">✕</span>`;
     el.onclick = () => removeVote(c);
-
     strip.appendChild(el);
   });
 }
 
-
 /* ── REMOVE ── */
-
 function removeVote(code) {
   delete votes[code];
-
-  document.getElementById("c-" + code)?.classList.remove("has-vote");
-
+  getEl(code)?.classList.remove('has-vote');
   renderAll();
 }
 
-
 /* ── COUNT ── */
-
 function updateCount() {
   count.textContent = `${Object.keys(votes).length} pays sélectionnés`;
 }
 
-
 /* ── RESET ── */
-
 function resetMap() {
   votes = {};
-
-  svg.querySelectorAll(".eu-country").forEach(e => {
-    e.classList.remove("has-vote");
-    e.style.fill = "";
+  document.querySelectorAll('#europe-svg-container svg .eu-country').forEach(e => {
+    e.classList.remove('has-vote');
   });
-
   renderAll();
 }
 
-
 /* ── RENDER ALL ── */
-
 function renderAll() {
   updateLogoOverlays();
   updateStrip();
   updateCount();
 }
 
-function waitImages() {
-  const imgs = document.querySelectorAll("img");
-  return Promise.all([...imgs].map(img => {
-    if (img.complete) return;
-    return new Promise(r => {
-      img.onload = img.onerror = r;
-    });
-  }));
-}
-
-/* ── EXPORT ── */
-
+/* ── EXPORT PNG ── */
 async function exportPNG() {
-  await waitImages();
+  const imgs = [...document.querySelectorAll('img')];
+  await Promise.all(imgs.map(img => img.complete
+    ? Promise.resolve()
+    : new Promise(r => { img.onload = img.onerror = r; })
+  ));
 
-  const el = document.getElementById("eu-canvas");
-
-  html2canvas(el, {
-    backgroundColor: "#eaf0ff",
+  html2canvas(document.getElementById('eu-canvas'), {
+    backgroundColor: '#1b2a4a',
     useCORS: true,
     scale: 2
   }).then(canvas => {
-    const a = document.createElement("a");
-    a.download = "vote-europe.png";
-    a.href = canvas.toDataURL("image/png");
+    const a = document.createElement('a');
+    a.download = 'vote-europe.png';
+    a.href = canvas.toDataURL('image/png');
     a.click();
   });
 }
 
-
 /* ── INIT ── */
-
 renderAll();
