@@ -38,6 +38,7 @@ fetch('europe-map.svg')
     svgEl.style.width   = '100%';
     svgEl.style.height  = 'auto';
     svgEl.style.display = 'block';
+    svgEl.style.maxHeight = '600px';
 
     svgEl.querySelectorAll('path[id], g[id]').forEach(el => {
       const code = el.id.toUpperCase();
