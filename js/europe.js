@@ -215,53 +215,63 @@ async function exportPNG() {
   const svgEl = document.querySelector('#europe-svg-container svg');
   if (!svgEl) return;
 
-  const vb = svgEl.viewBox.baseVal;
-  const scaleX = vb.width  / svgEl.getBoundingClientRect().width;
-  const scaleY = vb.height / svgEl.getBoundingClientRect().height;
-
-  // Clone le SVG
   const clone = svgEl.cloneNode(true);
   clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
 
-  // Ajoute les logos comme foreignObject
+  // Inline les couleurs de chaque pays
+  clone.querySelectorAll('.eu-country').forEach((el, i) => {
+    const orig = svgEl.querySelectorAll('.eu-country')[i];
+    const fill = orig.classList.contains('has-vote') ? '#1d5c42' : '#2f4070';
+    el.setAttribute('fill', fill);
+    el.setAttribute('stroke', '#0f1520');
+    el.setAttribute('stroke-width', '0.7');
+  });
+
+  // Ajoute logos + noms
   for (const [code, p] of Object.entries(votes)) {
-    const path = getEl(code);
+    const path = svgEl.querySelector(`[id="${code === 'UK' ? 'gb' : code.toLowerCase()}"]`);
     if (!path) continue;
     const bbox = path.getBBox();
-    const cx = bbox.x + bbox.width  / 2;
+    const cx = bbox.x + bbox.width / 2;
     const cy = bbox.y + bbox.height / 2;
 
     if (p.logo) {
       const img = document.createElementNS('http://www.w3.org/2000/svg', 'image');
       img.setAttribute('href', p.logo);
-      img.setAttribute('x', cx - 18);
-      img.setAttribute('y', cy - 12);
-      img.setAttribute('width', 36);
-      img.setAttribute('height', 22);
+      img.setAttribute('x', cx - 18); img.setAttribute('y', cy - 14);
+      img.setAttribute('width', 36);  img.setAttribute('height', 22);
       clone.appendChild(img);
     }
 
     const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     txt.setAttribute('x', cx);
-    txt.setAttribute('y', cy + (p.logo ? 18 : 5));
+    txt.setAttribute('y', cy + (p.logo ? 22 : 4));
     txt.setAttribute('text-anchor', 'middle');
-    txt.setAttribute('font-size', '8');
+    txt.setAttribute('font-size', '7');
+    txt.setAttribute('font-family', 'sans-serif');
     txt.setAttribute('fill', '#fff');
     txt.setAttribute('font-weight', 'bold');
-    txt.setAttribute('style', 'text-shadow: 0 1px 3px rgba(0,0,0,0.9)');
     txt.textContent = p.name;
     clone.appendChild(txt);
   }
+
+  // Fond bleu
+  const vb = svgEl.viewBox.baseVal;
+  const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  rect.setAttribute('x', vb.x); rect.setAttribute('y', vb.y);
+  rect.setAttribute('width', vb.width); rect.setAttribute('height', vb.height);
+  rect.setAttribute('fill', '#1b2a4a');
+  clone.insertBefore(rect, clone.firstChild);
 
   const svgData = new XMLSerializer().serializeToString(clone);
   const blob = new Blob([svgData], {type: 'image/svg+xml'});
   const url = URL.createObjectURL(blob);
 
   const img = new Image();
+  img.crossOrigin = 'anonymous';
   img.onload = () => {
     const canvas = document.createElement('canvas');
-    canvas.width  = vb.width  * 2;
-    canvas.height = vb.height * 2;
+    canvas.width = vb.width * 2; canvas.height = vb.height * 2;
     const ctx = canvas.getContext('2d');
     ctx.scale(2, 2);
     ctx.drawImage(img, 0, 0);
