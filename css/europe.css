@@ -61,11 +61,7 @@
   user-select: none;
 }
 
-/* ── FIX PRINCIPAL : canvas avec hauteur calculée pour tenir dans la viewport ──
-   On veut que la carte tienne entière à l'écran.
-   On calcule : 100vh - nav(60px) - header(~90px) - strip(~90px) - gaps - footer-bar(~44px)
-   ≈ 100vh - 340px. On clamp pour les petits écrans.
-*/
+/* ── CANVA ── */
 .eu-canvas {
   position: relative;
   width: 100%;
@@ -124,6 +120,14 @@
 @keyframes logoIn {
   from { opacity: 0; transform: translate(-50%, -50%) scale(.7); }
   to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+.eu-logo img {
+  object-fit: contain;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+  display: block;
 }
 
 /*
