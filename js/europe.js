@@ -150,12 +150,14 @@ function updateLogoOverlays() {
     const x = r.left + r.width  / 2 - layerRect.left;
     const y = r.top  + r.height / 2 - layerRect.top;
 
+    const size = Math.max(16, Math.min(48, Math.sqrt(r.width * r.height) * 0.4));
+   
     const div = document.createElement('div');
     div.className  = 'eu-logo';
     div.style.left = x + 'px';
     div.style.top  = y + 'px';
     div.innerHTML  = p.logo
-      ? `<img src="${p.logo}" onerror="this.style.display='none'"><div class="eu-logo-name">${p.name}</div>`
+      ? `<img src="${p.logo}" onerror="this.style.display='none'" style="width:${size}px;height:${size*0.6}px"><div class="eu-logo-name">${p.name}</div>`
       : `<div class="eu-logo-name">${p.name}</div>`;
 
     logoLayer.appendChild(div);
