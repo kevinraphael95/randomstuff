@@ -30,7 +30,7 @@ fetch('europe-map.svg')
     if (!svgEl.getAttribute('viewBox')) {
       const w = svgEl.getAttribute('width')  || '680';
       const h = svgEl.getAttribute('height') || '520';
-      svgEl.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      svgEl.setAttribute('viewBox', '0 50 700 475');
     }
     // Laisser le CSS gérer la taille
     svgEl.removeAttribute('width');
@@ -218,7 +218,7 @@ async function exportPNG() {
     : new Promise(r => { img.onload = img.onerror = r; })
   ));
 
-  html2canvas(document.getElementById('eu-canvas'), {
+  html2canvas(document.getElementById('map-outer'), {
     backgroundColor: '#1b2a4a',
     useCORS: true,
     scale: 2
