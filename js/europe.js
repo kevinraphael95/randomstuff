@@ -30,7 +30,7 @@ fetch('europe-map.svg')
     if (!svgEl.getAttribute('viewBox')) {
       const w = svgEl.getAttribute('width')  || '680';
       const h = svgEl.getAttribute('height') || '520';
-      svgEl.setAttribute('viewBox', '0 50 700 475');
+      svgEl.setAttribute('viewBox', '0 50 530 475');
     }
     // Laisser le CSS gérer la taille
     svgEl.removeAttribute('width');
