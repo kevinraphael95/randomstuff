@@ -31,24 +31,24 @@ const PARTIES = {
 ],
 
 "ES": [
-  { name: "PSOE",                                     orient: "Centre gauche",  seats: 121,
-    logo: "assets/logos_partis/es/psoe.png" },
-  { name: "Parti Populaire",                          orient: "Droite",         seats: 137,
-    logo: "assets/logos_partis/es/pp.png" },
-  { name: "Vox",                                      orient: "Extrême droite", seats: 33,
-    logo: "assets/logos_partis/es/vox.png" },
   { name: "Sumar",                                    orient: "Gauche",         seats: 31,
     logo: "assets/logos_partis/es/sumar.png" },
+  { name: "PSOE",                                     orient: "Centre gauche",  seats: 121,
+    logo: "assets/logos_partis/es/psoe.png" },
   { name: "Gauche républicaine de Catalogne",         orient: "Gauche",         seats: 7,
     logo: "assets/logos_partis/es/erc.png" },
-  { name: "Junts",                                    orient: "Centre droit",   seats: 7,
-    logo: "assets/logos_partis/es/junts.png" },
   { name: "EH Bildu",                                 orient: "Gauche",         seats: 6,
     logo: "assets/logos_partis/es/eh bildu.png" },
   { name: "Parti nationaliste basque",                orient: "Centre",         seats: 5,
     logo: "assets/logos_partis/es/pnb.png" },
+  { name: "Junts",                                    orient: "Centre droit",   seats: 7,
+    logo: "assets/logos_partis/es/junts.png" },
   { name: "Union du peuple navarrais",                orient: "Droite",         seats: 1,
-    logo: "assets/logos_partis/es/upn.png" }
+    logo: "assets/logos_partis/es/upn.png" },
+  { name: "Parti Populaire",                          orient: "Droite",         seats: 137,
+    logo: "assets/logos_partis/es/pp.png" },
+  { name: "Vox",                                      orient: "Extrême droite", seats: 33,
+    logo: "assets/logos_partis/es/vox.png" }
 ],
 
 "PT":[
