@@ -157,7 +157,7 @@ function updateLogoOverlays() {
     div.style.left = x + 'px';
     div.style.top  = y + 'px';
     div.innerHTML  = p.logo
-      ? `<img src="${p.logo}" onerror="this.style.display='none'" style="width:${size}px;height:${size*0.6}px"><div class="eu-logo-name">${p.name}</div>`
+      ? `<img src="${p.logo}" onerror="this.style.display='none'" style="width:${size}px;height:auto"><div class="eu-logo-name">${p.name}</div>`
       : `<div class="eu-logo-name">${p.name}</div>`;
 
     logoLayer.appendChild(div);
