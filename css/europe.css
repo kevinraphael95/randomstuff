@@ -6,19 +6,20 @@
 .eu-page {
   max-width: 1100px;
   margin: 0 auto;
-  padding: calc(var(--nav-h) + 32px) 24px 80px;
+  /* FIX : réduit le padding top, la nav fait déjà 60px via .page-wrap */
+  padding: 16px 24px 60px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 /* ── Header ── */
 .eu-header {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding-bottom: 20px;
+  padding-bottom: 16px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -30,12 +31,12 @@
 
 .eu-title {
   font-family: var(--f-display);
-  font-size: clamp(2rem, 4.5vw, 3.4rem);
+  font-size: clamp(1.6rem, 3.5vw, 2.6rem);
   font-weight: 800;
   letter-spacing: -.03em;
   line-height: 1.05;
   color: var(--text);
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .eu-title em {
@@ -45,7 +46,7 @@
 }
 
 .eu-sub {
-  font-size: .875rem;
+  font-size: .8rem;
   color: var(--muted);
   letter-spacing: .01em;
 }
@@ -60,21 +61,34 @@
   user-select: none;
 }
 
-/* ── The exportable canvas ── */
+/* ── FIX PRINCIPAL : canvas avec hauteur calculée pour tenir dans la viewport ──
+   On veut que la carte tienne entière à l'écran.
+   On calcule : 100vh - nav(60px) - header(~90px) - strip(~90px) - gaps - footer-bar(~44px)
+   ≈ 100vh - 340px. On clamp pour les petits écrans.
+*/
 .eu-canvas {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  /* FIX : hauteur fixe qui laisse tout voir sans scroll */
+  height: clamp(320px, calc(100vh - 340px), 560px);
   background: linear-gradient(180deg, #1b2a4a 0%, #101a2f 100%);
   border-radius: var(--r-xl) var(--r-xl) 0 0;
   overflow: hidden;
 }
 
 /* ── SVG map ── */
+#europe-svg-container {
+  width: 100%;
+  height: 100%;
+}
+
+#europe-svg-container svg,
 #europe-svg {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
+  /* FIX : le SVG remplit le conteneur sans déborder */
+  object-fit: contain;
 }
 
 .eu-country {
@@ -85,23 +99,16 @@
   transition: fill .15s;
 }
 
-.eu-country:hover {
-  fill: #3d5590;
-}
-
-.eu-country.has-vote {
-  fill: #1d5c42;
-}
-
-.eu-country.has-vote:hover {
-  fill: #256d4e;
-}
+.eu-country:hover  { fill: #3d5590; }
+.eu-country.has-vote       { fill: #1d5c42; }
+.eu-country.has-vote:hover { fill: #256d4e; }
 
 /* ── Logo layer ── */
 #logo-layer {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  z-index: 10;
 }
 
 .eu-logo {
@@ -121,52 +128,56 @@
 }
 
 .eu-logo img {
-  width: 56px;
-  height: 36px;
+  width: 52px;
+  height: 32px;
   object-fit: contain;
-  border-radius: 6px;
+  border-radius: 5px;
   background: #fff;
-  padding: 3px 4px;
-  box-shadow: 0 3px 16px rgba(0,0,0,.55), 0 0 0 2px rgba(255,255,255,.85);
+  padding: 2px 3px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.6), 0 0 0 2px rgba(255,255,255,.85);
   display: block;
 }
 
 .eu-logo-fallback {
-  width: 52px;
-  height: 32px;
-  border-radius: 6px;
-  background: #fff;
+  width: 48px;
+  height: 28px;
+  border-radius: 5px;
+  background: var(--surface3);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
-  box-shadow: 0 3px 16px rgba(0,0,0,.55), 0 0 0 2px rgba(255,255,255,.85);
+  font-size: .6rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  padding: 2px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.6), 0 0 0 2px rgba(255,255,255,.85);
 }
 
 .eu-logo-name {
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 700;
   color: #fff;
-  text-shadow: 0 1px 4px rgba(0,0,0,.9), 0 0 10px rgba(0,0,0,.7);
+  text-shadow: 0 1px 4px rgba(0,0,0,.9), 0 0 8px rgba(0,0,0,.8);
   white-space: nowrap;
-  max-width: 80px;
+  max-width: 72px;
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: center;
-  letter-spacing: .2px;
   font-family: var(--f-body);
 }
 
 /* ── Watermark ── */
 .eu-watermark {
   position: absolute;
-  bottom: 12px;
-  right: 16px;
+  bottom: 10px;
+  right: 14px;
   font-family: var(--f-mono);
-  font-size: .62rem;
-  color: rgba(255,255,255,.25);
+  font-size: .6rem;
+  color: rgba(255,255,255,.22);
   letter-spacing: .08em;
   pointer-events: none;
+  z-index: 5;
 }
 
 /* ── Tooltip ── */
@@ -176,8 +187,8 @@
   color: var(--text);
   border: 1px solid var(--border2);
   border-radius: var(--r-sm);
-  padding: 5px 12px;
-  font-size: .75rem;
+  padding: 4px 10px;
+  font-size: .72rem;
   font-weight: 600;
   pointer-events: none;
   opacity: 0;
@@ -199,23 +210,18 @@
   gap: 8px;
   pointer-events: none;
   transition: opacity .3s;
+  z-index: 2;
 }
-
 .eu-empty.hidden { opacity: 0; }
-
-.eu-empty-icon { font-size: 2.5rem; opacity: .35; }
-.eu-empty-text {
-  font-size: .9rem;
-  font-weight: 600;
-  color: rgba(255,255,255,.4);
-}
+.eu-empty-icon   { font-size: 2.2rem; opacity: .35; }
+.eu-empty-text   { font-size: .88rem; font-weight: 600; color: rgba(255,255,255,.38); }
 
 /* ── Footer bar ── */
 .eu-footer-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 18px;
+  padding: 9px 16px;
   background: var(--surface2);
   border-radius: 0 0 var(--r-xl) var(--r-xl);
   border: 1px solid var(--border);
@@ -225,7 +231,7 @@
 
 .eu-count {
   font-family: var(--f-mono);
-  font-size: .72rem;
+  font-size: .7rem;
   color: var(--muted);
   letter-spacing: .05em;
 }
@@ -234,14 +240,14 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: .7rem;
+  font-size: .68rem;
   color: var(--muted);
 }
 
 .eu-leg-dot {
   display: inline-block;
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -251,28 +257,28 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
-  padding: 14px 18px;
-  min-height: 72px;
+  padding: 12px 16px;
+  min-height: 60px;
 }
 
 .eu-strip-label {
   font-family: var(--f-mono);
-  font-size: .65rem;
+  font-size: .63rem;
   text-transform: uppercase;
   letter-spacing: .1em;
   color: var(--muted);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .eu-strip-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
 }
 
 .eu-strip-empty {
-  font-size: .8rem;
+  font-size: .78rem;
   color: var(--muted);
   font-style: italic;
 }
@@ -280,38 +286,32 @@
 .eu-strip-item {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   background: var(--surface2);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 5px 10px 5px 7px;
-  font-size: .75rem;
+  padding: 4px 9px 4px 6px;
+  font-size: .72rem;
   color: var(--text2);
   cursor: pointer;
   transition: all var(--t) var(--ease);
 }
-
 .eu-strip-item:hover {
   border-color: var(--border2);
   background: var(--surface3);
   color: var(--text);
 }
-
 .eu-strip-item img {
-  width: 36px;
-  height: 22px;
+  width: 32px; height: 20px;
   object-fit: contain;
-  border-radius: 4px;
+  border-radius: 3px;
   background: #fff;
   padding: 1px 2px;
 }
-
-.eu-strip-flag { font-size: .9rem; }
-
 .eu-strip-x {
-  margin-left: 4px;
+  margin-left: 3px;
   color: var(--muted);
-  font-size: .8rem;
+  font-size: .75rem;
 }
 
 /* ── Modal ── */
@@ -325,13 +325,12 @@
   justify-content: center;
   backdrop-filter: blur(4px);
 }
-
 .eu-modal-bg.active { display: flex; }
 
 .eu-modal {
   background: var(--surface);
   border-radius: var(--r-xl) var(--r-xl) 0 0;
-  padding: 18px 18px 36px;
+  padding: 16px 16px 32px;
   width: 100%;
   max-width: 680px;
   max-height: 78vh;
@@ -341,51 +340,45 @@
   box-shadow: 0 -20px 60px rgba(0,0,0,.5);
   animation: sheetUp .3s var(--ease) both;
 }
-
 @keyframes sheetUp {
   from { transform: translateY(100%); }
   to   { transform: translateY(0); }
 }
 
 .eu-modal-handle {
-  width: 38px;
-  height: 3px;
+  width: 36px; height: 3px;
   background: var(--surface3);
   border-radius: 2px;
-  margin: 0 auto 16px;
+  margin: 0 auto 14px;
 }
 
 .eu-modal-close {
   position: absolute;
-  top: 14px;
-  right: 16px;
+  top: 12px; right: 14px;
   background: var(--surface2);
   border: 1px solid var(--border);
   border-radius: 50%;
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
+  width: 26px; height: 26px;
+  display: grid; place-items: center;
   color: var(--text2);
-  font-size: .8rem;
+  font-size: .75rem;
   cursor: pointer;
   transition: all var(--t);
 }
-
 .eu-modal-close:hover { background: var(--surface3); color: var(--text); }
 
 .eu-modal-country {
   font-family: var(--f-display);
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   font-weight: 700;
   letter-spacing: -.01em;
   color: var(--text);
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .eu-modal-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 8px;
 }
 
@@ -402,37 +395,30 @@
   text-align: center;
   transition: all var(--t) var(--ease);
 }
-
 .eu-party-btn:hover {
   background: var(--surface3);
   border-color: var(--border2);
   transform: translateY(-2px);
 }
-
 .eu-party-btn.chosen {
   border-color: var(--gold);
   background: color-mix(in srgb, var(--gold) 8%, transparent);
 }
-
 .eu-party-btn img {
-  width: 72px;
-  height: 44px;
+  width: 68px; height: 42px;
   object-fit: contain;
 }
-
 .eu-party-btn .eu-pname {
-  font-size: .68rem;
+  font-size: .66rem;
   font-weight: 600;
   color: var(--text2);
   line-height: 1.3;
 }
-
 .eu-party-btn.chosen .eu-pname { color: var(--gold); }
-
 .eu-party-orient {
-  font-size: .58rem;
+  font-size: .56rem;
   font-weight: 700;
-  padding: 2px 7px;
+  padding: 2px 6px;
   border-radius: 100px;
   color: #fff;
   font-family: var(--f-mono);
@@ -441,8 +427,8 @@
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
-  .eu-page { padding: calc(var(--nav-h) + 16px) 14px 60px; gap: 14px; }
+  .eu-page  { padding: 12px 14px 50px; gap: 12px; }
   .eu-header { flex-direction: column; align-items: flex-start; }
-  .eu-modal-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
-  .eu-logo img { width: 40px; height: 26px; }
+  .eu-canvas { height: clamp(260px, 55vw, 380px); }
+  .eu-modal-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
 }
