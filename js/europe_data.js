@@ -3,7 +3,7 @@ const PARTIES = {
   { name: "La France Insoumise",    orient: "Extrême gauche", seats: 71,
     logo: "assets/logos_partis/fr/la-france-insoumise.svg" },
   { name: "Parti Communiste",       orient: "Extrême gauche", seats: 22,
-    logo: "assets/logos_partis/fr/pcf.svg" },
+    logo: "assets/logos_partis/fr/pcf.jpg" },
   { name: "Les Écologistes",        orient: "Gauche",         seats: 38,
     logo: "assets/logos_partis/fr/europe-ecologie-les-verts.svg" },
   { name: "Parti Socialiste",       orient: "Centre gauche",  seats: 69,
