@@ -147,15 +147,13 @@ function updateLogoOverlays() {
   const vb = svgEl.viewBox?.baseVal;
   if (!vb || vb.width === 0) return;
 
-  // FIX 3 : positions relatives au container, pas à la fenêtre
-  const containerEl   = document.getElementById('europe-svg-container');
-  const containerRect = containerEl.getBoundingClientRect();
-  const svgRect       = svgEl.getBoundingClientRect();
+  const svgRect = svgEl.getBoundingClientRect();
+  const layerRect = logoLayer.getBoundingClientRect();
 
-  const scaleX  = svgRect.width  / vb.width;
-  const scaleY  = svgRect.height / vb.height;
-  const offsetX = svgRect.left - containerRect.left;
-  const offsetY = svgRect.top  - containerRect.top;
+  const scaleX = svgRect.width  / vb.width;
+  const scaleY = svgRect.height / vb.height;
+  const offsetX = svgRect.left - layerRect.left;
+  const offsetY = svgRect.top  - layerRect.top;
 
   for (const [code, p] of Object.entries(votes)) {
     const path = getEl(code);
