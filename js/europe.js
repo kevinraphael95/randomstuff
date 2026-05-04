@@ -140,28 +140,15 @@ function vote(code, i) {
 /* ── LOGOS SUR LA CARTE ── */
 function updateLogoOverlays() {
   logoLayer.innerHTML = '';
-
-  const svgEl = document.querySelector('#europe-svg-container svg');
-  if (!svgEl) return;
-
-  const vb = svgEl.viewBox?.baseVal;
-  if (!vb || vb.width === 0) return;
-
-  const svgRect = svgEl.getBoundingClientRect();
   const layerRect = logoLayer.getBoundingClientRect();
-
-  const scaleX = svgRect.width  / vb.width;
-  const scaleY = svgRect.height / vb.height;
-  const offsetX = svgRect.left - layerRect.left;
-  const offsetY = svgRect.top  - layerRect.top;
 
   for (const [code, p] of Object.entries(votes)) {
     const path = getEl(code);
     if (!path) continue;
 
-    const bbox = path.getBBox();
-    const x = offsetX + (bbox.x + bbox.width  / 2) * scaleX;
-    const y = offsetY + (bbox.y + bbox.height / 2) * scaleY;
+    const r = path.getBoundingClientRect();
+    const x = r.left + r.width  / 2 - layerRect.left;
+    const y = r.top  + r.height / 2 - layerRect.top;
 
     const div = document.createElement('div');
     div.className  = 'eu-logo';
