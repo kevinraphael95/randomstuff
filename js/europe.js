@@ -167,7 +167,7 @@ window.addEventListener('resize', updateLogoOverlays);
 /* ── STRIP ── */
 function updateStrip() {
   const entries = Object.entries(votes);
-  empty.classList.toggle('hidden', entries.length > 0);
+  if (empty) empty.classList.toggle('hidden', entries.length > 0);
 
   strip.innerHTML = entries.length
     ? ''
