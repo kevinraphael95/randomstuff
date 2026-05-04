@@ -1,15 +1,25 @@
 const PARTIES = {
-"FR":[
-  {"name":"La France Insoumise","orient":"Extrême gauche","seats":71,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/La_France_insoumise_%28logo%2C_2022%29.svg/120px-La_France_insoumise_%28logo%2C_2022%29.svg.png"},
-  {"name":"Parti Communiste","orient":"Extrême gauche","seats":22,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/PCF_logo_2018.svg/120px-PCF_logo_2018.svg.png"},
-  {"name":"Les Écologistes","orient":"Gauche","seats":38,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Les_%C3%89cologistes_logo_2022.svg/120px-Les_%C3%89cologistes_logo_2022.svg.png"},
-  {"name":"Parti Socialiste","orient":"Centre gauche","seats":69,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Parti_socialiste_%28France%29_logo_2023.svg/120px-Parti_socialiste_%28France%29_logo_2023.svg.png"},
-  {"name":"Renaissance","orient":"Centre","seats":92,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Renaissance_logo_%282022%29.svg/120px-Renaissance_logo_%282022%29.svg.png"},
-  {"name":"MoDem","orient":"Centre","seats":36,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Mouvement_D%C3%A9mocrate_%28logo%2C_2017%29.svg/120px-Mouvement_D%C3%A9mocrate_%28logo%2C_2017%29.svg.png"},
-  {"name":"Horizons","orient":"Centre droit","seats":29,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Horizons_logo_%282021%29.svg/120px-Horizons_logo_%282021%29.svg.png"},
-  {"name":"Les Républicains","orient":"Droite","seats":39,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Logo_Les_R%C3%A9publicains.svg/120px-Logo_Les_R%C3%A9publicains.svg.png"},
-  {"name":"Rassemblement National","orient":"Extrême droite","seats":126,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Rassemblement_national_logo_%282022%29.svg/120px-Rassemblement_national_%28logo%2C_2022%29.svg.png"},
-  {"name":"Reconquête","orient":"Extrême droite","seats":16,"logo":"https://upload.wikimedia.org/wikipedia/fr/thumb/5/53/Logo_Reconqu%C3%AAte%21.svg/120px-Logo_Reconqu%C3%AAte%21.svg.png"}
+"FR": [
+  { name: "La France Insoumise",    orient: "Extrême gauche", seats: 71,
+    logo: "assets/logos_partis/fr/la-france-insoumise.svg" },
+  { name: "Parti Communiste",       orient: "Extrême gauche", seats: 22,
+    logo: "assets/logos_partis/fr/pcf.svg" },
+  { name: "Les Écologistes",        orient: "Gauche",         seats: 38,
+    logo: "assets/logos_partis/fr/europe-ecologie-les-verts.svg" },
+  { name: "Parti Socialiste",       orient: "Centre gauche",  seats: 69,
+    logo: "assets/logos_partis/fr/parti-socialiste.svg" },
+  { name: "Renaissance",            orient: "Centre",         seats: 92,
+    logo: "assets/logos_partis/fr/renaissance.svg" },
+  { name: "MoDem",                  orient: "Centre",         seats: 36,
+    logo: "assets/logos_partis/fr/mouvement-democrate.svg" },
+  { name: "Horizons",               orient: "Centre droit",   seats: 29,
+    logo: "assets/logos_partis/fr/horizons.svg" },
+  { name: "Les Républicains",       orient: "Droite",         seats: 39,
+    logo: "assets/logos_partis/fr/les-republicains.svg" },
+  { name: "Rassemblement National", orient: "Extrême droite", seats: 126,
+    logo: "assets/logos_partis/fr/rassemblement-national.svg" },
+  { name: "Reconquête",             orient: "Extrême droite", seats: 16,
+    logo: "assets/logos_partis/fr/reconquete.svg" },
 ],
 
 "DE":[
