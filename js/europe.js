@@ -274,17 +274,6 @@ async function exportPNG() {
   img.src = url;
 }
 
-  html2canvas(document.getElementById('map-outer'), {
-    backgroundColor: '#1b2a4a',
-    useCORS: true,
-    scale: 2
-  }).then(canvas => {
-    const a = document.createElement('a');
-    a.download = 'vote-europe.png';
-    a.href = canvas.toDataURL('image/png');
-    a.click();
-  });
-}
 
 /* ── INIT ── */
 renderAll();
