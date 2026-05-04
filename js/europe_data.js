@@ -23,11 +23,18 @@ const PARTIES = {
 ],
 
 "DE":[
-  {"name":"Die Linke","orient":"Extrême gauche","seats":64,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Die_Linke_logo.svg/120px-Die_Linke_logo.svg.png"},
-  {"name":"Bündnis 90/Die Grünen","orient":"Centre gauche","seats":85,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/B%C3%BCndnis_90_-_Die_Gr%C3%BCnen_Logo.svg/120px-B%C3%BCndnis_90_-_Die_Gr%C3%BCnen_Logo.svg.png"},
-  {"name":"SPD","orient":"Centre gauche","seats":120,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/SPD_logo.svg/120px-SPD_logo.svg.png"},
-  {"name":"CDU/CSU","orient":"Centre droit","seats":208,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/CDU_logo_2022.svg/120px-CDU_logo_2022.svg.png"},
-  {"name":"AfD","orient":"Extrême droite","seats":152,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/AfD_logo%2C_2017.svg/120px-AfD_logo%2C_2017.svg.png"}
+  {"name":"Die Linke",                                      "orient":"Extrême gauche",      "seats":64,
+   "logo":"assets/logos_partis/de/die_linke.png"},
+  {"name":"Alternative 90 / Les Verts",                     "orient":"Centre gauche",       "seats":85,
+   "logo":"assets/logos_partis/de/grunen.png"},
+  {"name":"Parti Social Démocrate",                         "orient":"Centre gauche",       "seats":120,
+   "logo":"assets/logos_partis/de/spd.png"},
+  {"name":"Union Chrétienne Démocrate",                     "orient":"Centre droit",        "seats":208,
+   "logo":"assets/logos_partis/de/cdu_csu.png"},
+  {"name":"Alternative pour l'Allemagne",                   "orient":"Extrême droite",      "seats":152,
+   "logo":"assets/logos_partis/de/reconquete.svg"},
+  {"name":"Fédération des électeurs du Schleswig du Sud",   "orient":"Centre Gauche",       "seats":1,
+  "logo":"assets/logos_partis/de/ssw.png"},
 ],
 
 "ES": [
@@ -59,7 +66,8 @@ const PARTIES = {
 ],
 
 "IT":[
-  {"name":"Partito Democratico","orient":"Centre gauche","seats":69,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Partito_Democratico_-_Logo_2023.svg/120px-Partito_Democratico_-_Logo_2023.svg.png"},
+  {"name":"Parti Democratique","orient":"Centre gauche","seats":69,
+   "logo":"assets/logos_partis/it/pd.png"},
   {"name":"Movimento 5 Stelle","orient":"Centre","seats":52,"logo":"https://upload.wikimedia.org/wikipedia/it/thumb/e/e5/Movimento_5_Stelle_Logo_vettoriale.svg/120px-Movimento_5_Stelle_Logo_vettoriale.svg.png"},
   {"name":"Forza Italia","orient":"Centre droit","seats":45,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Forza_Italia_logo_%282013%29.svg/120px-Forza_Italia_logo_%282013%29.svg.png"},
   {"name":"Lega","orient":"Droite radicale","seats":66,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Logo_Lega_Salvini_Premier.svg/120px-Logo_Lega_Salvini_Premier.svg.png"},
