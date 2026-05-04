@@ -141,21 +141,38 @@ function vote(code, i) {
 function updateLogoOverlays() {
   logoLayer.innerHTML = '';
   const layerRect = logoLayer.getBoundingClientRect();
+  const placed = [];
 
   for (const [code, p] of Object.entries(votes)) {
     const path = getEl(code);
     if (!path) continue;
 
     const r = path.getBoundingClientRect();
-    const x = r.left + r.width  / 2 - layerRect.left;
-    const y = r.top  + r.height / 2 - layerRect.top;
-
+    const cx = r.left + r.width  / 2 - layerRect.left;
+    const cy = r.top  + r.height / 2 - layerRect.top;
     const size = Math.max(16, Math.min(48, Math.sqrt(r.width * r.height) * 0.4));
-   
+
+    // Cherche une position sans collision
+    const w = size + 4;
+    const h = size * 0.7 + 14;
+    const offsets = [[0,0],[0,-20],[0,20],[-20,0],[20,0],[-20,-20],[20,-20],[-20,20],[20,20]];
+    let fx = cx, fy = cy, ok = false;
+
+    for (const [dx, dy] of offsets) {
+      const tx = cx + dx, ty = cy + dy;
+      const box = {x: tx - w/2, y: ty - h/2, w, h};
+      if (!placed.some(b => !(box.x+box.w < b.x || box.x > b.x+b.w || box.y+box.h < b.y || box.y > b.y+b.h))) {
+        fx = tx; fy = ty; ok = true;
+        placed.push(box);
+        break;
+      }
+    }
+    if (!ok) placed.push({x: fx - w/2, y: fy - h/2, w, h});
+
     const div = document.createElement('div');
     div.className  = 'eu-logo';
-    div.style.left = x + 'px';
-    div.style.top  = y + 'px';
+    div.style.left = fx + 'px';
+    div.style.top  = fy + 'px';
     div.innerHTML  = p.logo
       ? `<img src="${p.logo}" onerror="this.style.display='none'" style="width:${size}px;height:auto"><div class="eu-logo-name">${p.name}</div>`
       : `<div class="eu-logo-name">${p.name}</div>`;
