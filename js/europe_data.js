@@ -32,7 +32,7 @@ const PARTIES = {
   {"name":"Union Chrétienne Démocrate",                     "orient":"Centre droit",        "seats":208,
    "logo":"assets/logos_partis/de/cdu_csu.png"},
   {"name":"Alternative pour l'Allemagne",                   "orient":"Extrême droite",      "seats":152,
-   "logo":"assets/logos_partis/de/reconquete.svg"},
+   "logo":"assets/logos_partis/de/afd.png"},
   {"name":"Fédération des électeurs du Schleswig du Sud",   "orient":"Centre Gauche",       "seats":1,
   "logo":"assets/logos_partis/de/ssw.png"},
 ],
