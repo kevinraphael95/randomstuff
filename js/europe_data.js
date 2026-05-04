@@ -59,7 +59,8 @@ const PARTIES = {
 ],
 
 "PT":[
-  {"name":"Bloco de Esquerda","orient":"Extrême gauche","seats":5,"logo":""},
+  {"name":"Bloc de gauche","orient":"Extrême gauche","seats":5,
+   "logo":"assets/logos_partis/pt/be.png"},
   {"name":"PS","orient":"Centre gauche","seats":78,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Partido_Socialista_%28Portugal%29_logo.svg/120px-Partido_Socialista_%28Portugal%29_logo.svg.png"},
   {"name":"AD (PSD+CDS)","orient":"Centre droit","seats":80,"logo":""},
   {"name":"Chega","orient":"Extrême droite","seats":50,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Chega_logo.svg/120px-Chega_logo.svg.png"}
@@ -75,7 +76,8 @@ const PARTIES = {
 ],
 
 "UK":[
-  {"name":"Labour","orient":"Centre gauche","seats":403,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Labour_Party_%28UK%29_logo.svg/120px-Labour_Party_%28UK%29_logo.svg.png"},
+  {"name":"Parti Travailliste","orient":"Centre gauche","seats":403,
+   "logo":"assets/logos_partis/en/labour.png"},
   {"name":"Conservative","orient":"Centre droit","seats":121,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Conservative_Party_%28UK%29_logo.svg/120px-Conservative_Party_%28UK%29_logo.svg.png"},
   {"name":"Liberal Democrats","orient":"Centre","seats":72,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Liberal_Democrats_%28UK%29_Logo.svg/120px-Liberal_Democrats_%28UK%29_Logo.svg.png"},
   {"name":"SNP","orient":"Régionaliste","seats":9,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/SNP_logo.svg/120px-SNP_logo.svg.png"},
