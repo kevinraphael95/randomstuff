@@ -69,9 +69,8 @@
 .eu-canvas {
   position: relative;
   width: 100%;
-  /* FIX : hauteur fixe qui laisse tout voir sans scroll */
   height: clamp(380px, calc(100vh - 240px), 720px);
-  background: linear-gradient(180deg, #4a90d9 0%, #2d6aa8 100%);
+  background: linear-gradient(180deg, #1a5276 0%, #1a3a5c 100%);
   border-radius: var(--r-xl) var(--r-xl) 0 0;
   overflow: hidden;
 }
