@@ -30,13 +30,13 @@ fetch('europe-map.svg')
     if (!svgEl.getAttribute('viewBox')) {
       const w = svgEl.getAttribute('width')  || '680';
       const h = svgEl.getAttribute('height') || '520';
-      svgEl.setAttribute('viewBox', '0 0 700 900');
+      svgEl.setAttribute('viewBox', `0 0 ${w} ${h}`);
     }
     // Laisser le CSS gérer la taille
     svgEl.removeAttribute('width');
     svgEl.removeAttribute('height');
     svgEl.style.width   = '100%';
-    svgEl.style.height  = 'auto';
+    svgEl.style.height  = '100%';
     svgEl.style.display = 'block';
 
     svgEl.querySelectorAll('path[id], g[id]').forEach(el => {
