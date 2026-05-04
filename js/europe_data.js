@@ -30,11 +30,25 @@ const PARTIES = {
   {"name":"AfD","orient":"Extrême droite","seats":152,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/AfD_logo%2C_2017.svg/120px-AfD_logo%2C_2017.svg.png"}
 ],
 
-"ES":[
-  {"name":"Sumar","orient":"Extrême gauche","seats":31,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Sumar_logo_%282023%29.svg/120px-Sumar_logo_%282023%29.svg.png"},
-  {"name":"PSOE","orient":"Centre gauche","seats":120,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/PSOE_logo.svg/120px-PSOE_logo.svg.png"},
-  {"name":"Partido Popular","orient":"Centre droit","seats":137,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Partido_Popular_logo_2022.svg/120px-Partido_Popular_logo_2022.svg.png"},
-  {"name":"Vox","orient":"Extrême droite","seats":33,"logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/VOX_logo_2018.svg/120px-VOX_logo_2018.svg.png"}
+"ES": [
+  { name: "PSOE",                                     orient: "Centre gauche",  seats: 121,
+    logo: "assets/logos_partis/es/psoe.png" },
+  { name: "Parti Populaire",                          orient: "Droite",         seats: 137,
+    logo: "assets/logos_partis/es/pp.png" },
+  { name: "Vox",                                      orient: "Extrême droite", seats: 33,
+    logo: "assets/logos_partis/es/vox.png" },
+  { name: "Sumar",                                    orient: "Gauche",         seats: 31,
+    logo: "assets/logos_partis/es/sumar.png" },
+  { name: "Gauche républicaine de Catalogne",         orient: "Gauche",         seats: 7,
+    logo: "assets/logos_partis/es/erc.png" },
+  { name: "Junts",                                    orient: "Centre droit",   seats: 7,
+    logo: "assets/logos_partis/es/junts.png" },
+  { name: "EH Bildu",                                 orient: "Gauche",         seats: 6,
+    logo: "assets/logos_partis/es/eh bildu.png" },
+  { name: "Parti nationaliste basque",                orient: "Centre",         seats: 5,
+    logo: "assets/logos_partis/es/pnb.png" },
+  { name: "Union du peuple navarrais",                orient: "Droite",         seats: 1,
+    logo: "assets/logos_partis/es/upn.png" }
 ],
 
 "PT":[
