@@ -150,7 +150,7 @@ function updateLogoOverlays() {
     const r = path.getBoundingClientRect();
     const cx = r.left + r.width  / 2 - layerRect.left;
     const cy = r.top  + r.height / 2 - layerRect.top;
-    const size = Math.max(20, Math.min(64, Math.sqrt(r.width * r.height) * 0.55));
+    const size = Math.max(20, Math.min(64, Math.sqrt(r.width * r.height) * 0.42));
 
     // Cherche une position sans collision
     const w = size + 4;
