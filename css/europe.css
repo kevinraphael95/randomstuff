@@ -95,8 +95,8 @@
 }
 
 .eu-country:hover  { fill: #3d5590; }
-.eu-country.has-vote       { fill: #1d5c42; }
-.eu-country.has-vote:hover { fill: #256d4e; }
+.eu-country.has-vote       { fill: #7dcea0; }
+.eu-country.has-vote:hover { fill: #a9dfbf; }
 
 /* ── Logo layer ── */
 #logo-layer {
