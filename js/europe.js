@@ -40,10 +40,24 @@ fetch('europe-map.svg')
     svgEl.style.display = 'block';
 
     svgEl.querySelectorAll('path[id], g[id]').forEach(el => {
-      const code = el.id.toUpperCase();
-      // FIX 2 : le SVG utilise "gb" pas "uk"
-      const mappedCode = code === 'GB' ? 'UK' : code;
-      if (!PARTIES[mappedCode]) return;
+    // Mapping des IDs mapchart vers tes codes pays
+    const MAPCHART_MAP = {
+      'United_Kingdom': 'UK', 'France': 'FR', 'Germany': 'DE',
+      'Spain': 'ES', 'Portugal': 'PT', 'Italy': 'IT', 'Belgium': 'BE',
+      'Netherlands': 'NL', 'Sweden': 'SE', 'Norway': 'NO', 'Finland': 'FI',
+      'Denmark': 'DK', 'Poland': 'PL', 'Czechia': 'CZ', 'Austria': 'AT',
+      'Hungary': 'HU', 'Romania': 'RO', 'Croatia': 'HR', 'Serbia': 'RS',
+      'Greece': 'GR', 'Estonia': 'EE', 'Latvia': 'LV', 'Lithuania': 'LT',
+      'Bulgaria': 'BG', 'Albania': 'AL', 'Switzerland': 'CH', 'Ireland': 'IE',
+      'Iceland': 'IS', 'Slovakia': 'SK', 'Slovenia': 'SI',
+      'Bosnia_and_Herzegovina': 'BA', 'North_Macedonia': 'MK',
+      'Montenegro': 'ME', 'Ukraine': 'UA', 'Moldova': 'MD',
+      'Belarus': 'BY', 'Luxembourg': 'LU'
+    };
+   
+    svgEl.querySelectorAll('path[id], g[id]').forEach(el => {
+      const mappedCode = MAPCHART_MAP[el.id];
+      if (!mappedCode || !PARTIES[mappedCode]) return;
       el.dataset.country = mappedCode; // stocker le code mappé
       el.classList.add('eu-country');
       el.addEventListener('click',      ()  => openModal(mappedCode));
@@ -115,9 +129,8 @@ function renderParties(code) {
 
 /* ── HELPER: trouve un path par code ── */
 function getEl(code) {
-  // FIX 2 : UK dans les données = gb dans le SVG
-  const svgId = code === 'UK' ? 'gb' : code.toLowerCase();
-  return document.querySelector(`#europe-svg-container svg [id="${svgId}"]`);
+  const svgId = Object.keys(MAPCHART_MAP).find(k => MAPCHART_MAP[k] === code);
+  return svgId ? document.querySelector(`#europe-svg-container svg [id="${svgId}"]`) : null;
 }
 
 /* ── VOTE ── */
