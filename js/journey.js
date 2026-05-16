@@ -144,38 +144,21 @@ async function fetchWikipediaImage(searchName) {
 // La flèche longe le BAS de chaque bloc (y = top + LABEL_H + size)
 // puis monte verticalement avant le prochain bloc
 function getPositions(n) {
-  const TITLE_W = 100;
-  const GAP = 4;
-  const MARGIN_L = 20; // marge gauche fixe
+  const GAP     = 4;
+  const MARGIN_L = 18;
+  // Les blocs utilisent toute la largeur — le titre MY POLITICAL JOURNEY
+  // est en overlay bas-droite, les blocs peuvent passer dessus
+  const zoneW  = CW - MARGIN_L - 10; // 10px marge droite
 
-  // Zone horizontale disponible pour les blocs
-  const zoneW = CW - TITLE_W - MARGIN_L;
-
-  // Zone verticale disponible
   const availV = CH - MARGIN_BOT - LABEL_H - MARGIN_TOP;
 
-  // La taille + stepY doivent couvrir toute la hauteur :
-  // size + (n-1)*stepY = availV  et  stepY = size * ratio
-  // => size * (1 + ratio*(n-1)) = availV
-  // On choisit ratio tel que les blocs remplissent bien
-  const ratio = n <= 2 ? 0.7 : n <= 4 ? 0.6 : n <= 6 ? 0.5 : 0.4;
-
-  // Taille par la hauteur (remplit verticalement)
+  const ratio  = n <= 2 ? 0.7 : n <= 4 ? 0.6 : n <= 6 ? 0.5 : 0.4;
   const sizeByH = Math.floor(availV / (1 + ratio * (n - 1)));
-
-  // Taille par la largeur (remplit horizontalement)
   const sizeByW = Math.floor((zoneW - GAP * (n - 1)) / n);
-
-  // Prendre le min pour ne pas dépasser dans un sens
-  const maxAbs = n <= 2 ? 200 : n <= 4 ? 150 : n <= 7 ? 110 : 80;
-  const size   = Math.min(sizeByH, sizeByW, maxAbs);
-  const stepY  = Math.round(size * ratio);
-
-  const BASE = CH - MARGIN_BOT - LABEL_H;
-
-  // Étaler les blocs sur toute la largeur dispo
-  const totalW  = n * size + (n - 1) * GAP;
-  // Si les blocs sont plus petits que la zone, les coller à gauche avec marge
+  const maxAbs  = n <= 2 ? 200 : n <= 4 ? 150 : n <= 7 ? 110 : 80;
+  const size    = Math.min(sizeByH, sizeByW, maxAbs);
+  const stepY   = Math.round(size * ratio);
+  const BASE    = CH - MARGIN_BOT - LABEL_H;
   const startX  = MARGIN_L;
 
   return Array.from({ length: n }, (_, i) => ({
@@ -227,10 +210,10 @@ function redraw() {
     }
   }
 
-  // Queue finale horizontale
+  // Queue finale horizontale — s'arrête pile après le dernier bloc
   const last = pos[n - 1];
   const lastY = last.top + last.size + ARROW_OFF;
-  const arrowEndX = Math.min(last.x + last.size + ARROW_TAIL, CW - 10);
+  const arrowEndX = Math.min(last.x + last.size + ARROW_TAIL, CW - 8);
   pts.push(`${arrowEndX},${lastY}`);
 
   stairLine.setAttribute('points', pts.join(' '));
@@ -383,7 +366,7 @@ function drawArrowOverlay(ctx, pos) {
 
   const last = pos[pos.length - 1];
   const lastY = last.top + last.size + ARROW_OFF;
-  const arrowEnd = Math.min(last.x + last.size + ARROW_TAIL, CW - 10);
+  const arrowEnd = Math.min(last.x + last.size + ARROW_TAIL, CW - 8);
   ctx.lineTo(arrowEnd - 16, lastY);
   ctx.stroke();
 
